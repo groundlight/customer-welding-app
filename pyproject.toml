@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "customer-welding-app"
+version = "0.1.0"
+description = "Weld Count Checking and Tag Printing App"
+authors = ["Harry Tung <harry@groundlight.ai>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+framegrab = "^0.8.0"
+groundlight = "^0.20.0"
+opencv-python = "4.9.0.80"
+flask = "^3.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

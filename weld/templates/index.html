@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{url_for('static', filename='styles/styles.css')}}">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<html>
+
+<head>
+    <title>Home - Groundlight Weld Counter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
+    <!--Scripts-->
+    {% include 'script.html' %}
+</head>
+
+<body>
+    <!--Header Bar-->
+    {% include 'header.html' %}
+
+    <div id="content" class="content">
+        <h2>Jig Number</h2>
+    </div>
+
+    <div id="loading" class="loading"></div>
+
+    <!--Footer Bar-->
+    {% include 'footer.html' %}
+</body>
+
+</html>
