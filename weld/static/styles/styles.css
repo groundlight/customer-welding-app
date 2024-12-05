@@ -1,5 +1,6 @@
 /* Default Font */
 * {
+    font-size: 20px;
     font-family: "Barlow", sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -21,7 +22,7 @@ body {
     position: sticky;
     top: 0;
     width: 100%;
-    padding: 5px 0px;
+    padding: 15px 0px;
     background-color: #0D004D;
     color: white;
 }
@@ -48,7 +49,7 @@ body {
     position: fixed;
     bottom: 0;
     width: 100%;
-    padding: 5px 0px;
+    padding: 10px 0px;
     background-color: gray;
     color: white;
 }
@@ -73,6 +74,7 @@ body {
 }
 
 h2 {
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -85,10 +87,14 @@ h2 {
     cursor: pointer;
     border: none;
     border-radius: 15%;
-    font-size: 16px;
+    font-size: 30px;
     color: white;
     text-align: center;
     text-decoration: none;
+}
+
+.button-footer:active {
+    background-color: #323335;
 }
 
 /* Images */
