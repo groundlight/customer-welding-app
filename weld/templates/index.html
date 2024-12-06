@@ -7,7 +7,10 @@
     <title>Home - Groundlight Weld Counter</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
     <!--Scripts-->
-    {% include 'script.html' %}
+    <!--Loading Script-->
+    <script src="{{url_for('static', filename='scripts/loading.js')}}"></script>
+    <!--Jig Lock Script-->
+    <script src="{{url_for('static', filename='scripts/jig-lock.js')}}"></script>
 </head>
 
 <body>
@@ -56,6 +59,14 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="play-icon" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"></path>
                 </svg>
+                <div class="keyboard-hint">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="keyboard-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M20 7v10H4V7h16m0-2H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2zm0 3h2v2h-2zM8 8h2v2H8zm0 3h2v2H8zm-3 0h2v2H5zm0-3h2v2H5zm3 6h8v2H8zm6-3h2v2h-2zm0-3h2v2h-2zm3 3h2v2h-2zm0-3h2v2h-2z">
+                        </path>
+                    </svg>
+                    <span class="keyboard-text">Enter</span>
+                </div>
             </button>
         </div>
     </div>
