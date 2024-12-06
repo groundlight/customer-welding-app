@@ -70,23 +70,67 @@ body {
 
 /* Content Page */
 .content {
-    margin: 50px 8%;
+    margin: 40px 8%;
 }
 
-h2 {
+.horizontal-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.vertical-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group:last-child {
+    margin-right: 0;
+}
+
+.text-box,
+.dropdown {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+label {
     font-size: 30px;
     font-weight: bold;
+}
+
+/* Separator */
+.separator {
+    height: 2px;
+    margin: 20px 0px 40px 0px;
+    background: #ccc;
+    border: 0;
 }
 
 /* Buttons */
 .button-footer {
     display: inline-block;
     margin: auto;
-    padding: 10px 20px;
+    padding: 15px 20px;
     background-color: #919599;
     cursor: pointer;
     border: none;
-    border-radius: 15%;
+    border-radius: 15px;
     font-size: 30px;
     color: white;
     text-align: center;
@@ -97,11 +141,40 @@ h2 {
     background-color: #323335;
 }
 
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.start-button {
+    margin: auto;
+    padding: 30px 30px;
+    background-color: #0450BA;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    font-size: 40px;
+    color: white;
+    text-align: center;
+}
+
+.start-button:active {
+    background-color: #033882;
+}
+
 /* Images */
 #logo-image {
     width: auto;
     height: 30px;
     margin-right: 10px;
+}
+
+/* SVGs */
+.play-icon {
+    fill: white;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
 }
 
 /* Loading */
