@@ -50,7 +50,8 @@ body {
     bottom: 0;
     width: 100%;
     padding: 10px 0px;
-    background-color: gray;
+    background-color: #C8CDD3;
+    font-size: 15px;
     color: white;
 }
 
@@ -59,6 +60,20 @@ body {
     justify-content: flex-start;
     align-items: center;
     margin-left: 3%;
+}
+
+#footer-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#lock-text {
+    width: 100px;
+    font-size: 16px;
+    color: #49494D;
+    text-align: center;
 }
 
 #footer-right {
@@ -70,7 +85,7 @@ body {
 
 /* Content Page */
 .content {
-    margin: 40px 8%;
+    margin: 40px 6%;
 }
 
 .horizontal-group {
@@ -147,8 +162,9 @@ label {
 }
 
 .start-button {
+    position: relative;
     margin: auto;
-    padding: 30px 30px;
+    padding: 30px 60px;
     background-color: #0450BA;
     cursor: pointer;
     border: none;
@@ -175,6 +191,83 @@ label {
     width: 50px;
     height: 50px;
     vertical-align: middle;
+}
+
+.keyboard-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: rgb(200, 200, 200);
+    text-align: center;
+}
+
+.keyboard-icon {
+    fill: rgb(200, 200, 200);
+    width: 24px;
+    height: 24px;
+}
+
+.keyboard-text {
+    margin-top: 2px;
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+}
+
+/* Jig Lock Switch */
+
+.switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: 0.4s;
+    background-color: grey;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    width: 19px;
+    height: 19px;
+    transition: 0.4s;
+    background-color: white;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(25px);
+}
+
+#lock-status {
+    font-size: 14px;
+    font-weight: bold;
 }
 
 /* Loading */
