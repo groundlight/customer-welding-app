@@ -106,7 +106,7 @@ def part():
 
     else:
         # Redirect back to the index page if the request is not POST (no login information received)
-        return redirect(url_for("index"))
+        return render_template("part.html", **context)
 
 
 @app.route("/process", methods=["GET", "POST"])
