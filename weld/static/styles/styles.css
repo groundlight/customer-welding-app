@@ -1,9 +1,18 @@
 /* Default Font */
 * {
-    font-size: 20px;
+    font-size: 25px;
     font-family: "Barlow", sans-serif;
     font-style: normal;
     font-weight: 400;
+}
+
+p {
+    font-size: 30px;
+}
+
+b {
+    font-size: 30px;
+    font-weight: bold;
 }
 
 /* Body Style: Using Groundlight */
@@ -124,9 +133,55 @@ body {
     font-size: 30px;
 }
 
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 label {
     font-size: 30px;
     font-weight: bold;
+}
+
+#total-welds {
+    box-sizing: border-box;
+    width: 20%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+.content-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weld-info {
+    display: table;
+    margin-top: 15%;
+}
+
+.row {
+    display: table-row;
+}
+
+.title, .number {
+    display: table-cell;
+    padding: 5px 10px;
+}
+
+.title {
+    font-weight: normal;
+    text-align: right;
+}
+
+.number {
+    font-weight: bold;
+    text-align: left;
 }
 
 /* Separator */
@@ -176,6 +231,21 @@ label {
 
 .start-button:active {
     background-color: #033882;
+}
+
+.decrement,
+.increment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 50px;
+    background-color: #808080;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    font-size: 40px;
+    color: white;
 }
 
 /* Images */
@@ -256,11 +326,11 @@ label {
     border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #2196F3;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(25px);
 }
 
@@ -281,7 +351,7 @@ input:checked + .slider:before {
 .loading {
     display: none;
     position: fixed;
-    top: 15%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 120px;
@@ -294,11 +364,11 @@ input:checked + .slider:before {
 
 @keyframes spin {
     0% {
-        transform: rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
     }
 
 100% {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
     }
 }
 

@@ -20,6 +20,8 @@
         </svg>
     </div>
     <div id="footer-right">
-        <button id="button-end-shift" class="button-footer">Exit &#10005</button>
+        <form method="POST" action="{{ url_for('index') }}">
+            <button id="button-end-shift" class="button-footer">Exit &#10005</button>
+        </form>
     </div>
 </div>
