@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Poll the /api/lock-status endpoint every 5 seconds
     function pollLockStatus() {
-        fetch("/api/lock-status")
+        fetch(getLockStatusUrl)
             .then((response) => response.json())
             .then((data) => {
                 updateLockUI(data.is_locked);
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Send a request to update the lock status
     toggleLock.addEventListener("change", function () {
         const isLocked = toggleLock.checked;
-        fetch("/api/lock-status", {
+        fetch(lockStatusUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
