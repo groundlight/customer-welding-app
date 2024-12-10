@@ -50,6 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form behavior
+            const submitButton = document.querySelector('#start-welding-button');
+            if (submitButton) {
+                submitButton.click();
+            }
+        }
+    });
+
     startWeldingButton.addEventListener("click", function (event) {
         // Prevent form submission if validation fails
         if (!validateFields()) {

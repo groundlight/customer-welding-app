@@ -47,6 +47,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return isValid;
     }
 
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form behavior
+            const submitButton = document.querySelector('#start-shift-button');
+            if (submitButton) {
+                submitButton.click();
+            }
+        }
+    });
+
     startShiftButton.addEventListener("click", function (event) {
         // Prevent form submission if validation fails
         if (!validateFields()) {

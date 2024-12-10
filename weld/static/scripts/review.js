@@ -61,6 +61,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form behavior
+            const submitButton = document.querySelector('#print-tag-button');
+            if (submitButton) {
+                submitButton.click();
+            }
+        }
+    });
+
     leftWeldInput.addEventListener('input', updateTotalWelds);
     rightWeldInput.addEventListener('input', updateTotalWelds);
 });
