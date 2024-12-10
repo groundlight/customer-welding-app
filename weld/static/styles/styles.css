@@ -99,13 +99,20 @@ body {
 
 .horizontal-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 10px;
+}
+
+.horizontal-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .vertical-group {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
 }
 
@@ -133,6 +140,16 @@ body {
     font-size: 30px;
 }
 
+.text-box-weld {
+    box-sizing: border-box;
+    width: 100px;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
 .control-group {
     display: flex;
     align-items: center;
@@ -144,9 +161,21 @@ label {
     font-weight: bold;
 }
 
+.small-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #666;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 #total-welds {
     box-sizing: border-box;
-    width: 20%;
     margin-top: 5px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -169,7 +198,8 @@ label {
     display: table-row;
 }
 
-.title, .number {
+.title,
+.number {
     display: table-cell;
     padding: 5px 10px;
 }
@@ -368,7 +398,7 @@ input:checked+.slider:before {
     }
 
 100% {
-    transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }
 

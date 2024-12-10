@@ -38,31 +38,60 @@
                 </div>
             </div>
             <div class="horizontal-group">
+                <!-- Left Welds -->
                 <div class="input-group">
                     <label>Left Welds</label>
                     <div class="control-group">
-                        <span class="text-box" id="expected-left-welds">{{ ExpectedLeftWelds }}</span>
-                        <input type="number" id="left-welds" class="text-box" name="actual_left_welds"
-                            value="{{ ActualLeftWelds }}" min="0" max="200">
-                        <button class="decrement" data-target="left">-</button>
-                        <button class="increment" data-target="left">+</button>
+                        <div class="input-wrapper">
+                            <label class="small-label" for="expected-left-welds">Expected</label>
+                            <span class="text-box-weld" id="expected-left-welds">{{ ExpectedLeftWelds }}</span>
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="small-label" for="left-welds">Actual</label>
+                            <div class="horizontal-wrapper">
+                                <input type="number" id="left-welds" class="text-box-weld" name="actual_left_welds"
+                                    value="{{ ActualLeftWelds }}" min="0" max="200">
+                                <button class="decrement" data-target="left">-</button>
+                                <button class="increment" data-target="left">+</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Right Welds -->
                 <div class="input-group">
                     <label>Right Welds</label>
                     <div class="control-group">
-                        <span class="text-box" id="expected-right-welds">{{ ExpectedRightWelds }}</span>
-                        <input type="number" id="right-welds" class="text-box" name="actual_right_welds"
-                            value="{{ ActualRightWelds }}" min="0" max="200">
-                        <button class="decrement" data-target="right">-</button>
-                        <button class="increment" data-target="right">+</button>
+                        <div class="input-wrapper">
+                            <label class="small-label" for="expected-right-welds">Expected</label>
+                            <span class="text-box-weld" id="expected-right-welds">{{ ExpectedRightWelds }}</span>
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="small-label" for="right-welds">Actual</label>
+                            <div class="horizontal-wrapper">
+                                <input type="number" id="right-welds" class="text-box-weld" name="actual_right_welds"
+                                    value="{{ ActualRightWelds }}" min="0" max="200">
+                                <button class="decrement" data-target="right">-</button>
+                                <button class="increment" data-target="right">+</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Total Welds -->
                 <div class="input-group">
                     <label>Total</label>
                     <div class="horizontal-group">
-                        <span class="text-box" id="expected-total-welds">0</span>
-                        <span class="text-box" id="total-welds">0</span>
+                        <!-- Expected Welds -->
+                        <div class="input-wrapper">
+                            <label class="small-label" for="expected-total-welds">Expected</label>
+                            <span class="text-box-weld" id="expected-total-welds">0</span>
+                        </div>
+                        <!-- Actual Welds -->
+                        <div class="input-wrapper">
+                            <label class="small-label" for="total-welds">Actual</label>
+                            <span class="text-box-weld" id="total-welds">0</span>
+                        </div>
                     </div>
                 </div>
             </div>
