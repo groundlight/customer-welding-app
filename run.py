@@ -14,7 +14,7 @@ if __name__ == "__main__":
     # Adjust application proxy when running behind a reverse proxy (balenaCloud)
     # Check if we are running through balenaCloud (It is running on balena if the environment variable BALENA is set)
     if os.getenv("BALENA"):
-        app.config["APPLICATION_ROOT"] = "apps/app_1/"
+        app.config["APPLICATION_ROOT"] = "apps/app_1"
     else:
         app.config["APPLICATION_ROOT"] = ""
     

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function updateData() {
         try {
-            const response = await fetch('/api/weld-data'); // Replace with the correct endpoint
+            const response = await fetch(weldStatusUrl); 
             const data = await response.json();
             const partNumber = document.getElementById('partNumber');
             const leftWeldCount = document.getElementById('leftWeldCount');
