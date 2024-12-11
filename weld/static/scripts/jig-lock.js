@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleLock = document.getElementById("toggle-lock");
     const iconUnlockPath = document.querySelector("#icon-unlock path");
     const iconLockedPath = document.querySelector("#icon-lock path");
+    var url = document.getElementById('index-form').action
     
     // Function to update the UI based on the lock status
     function updateLockUI(isLocked) {
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Poll the /api/lock-status endpoint every 5 seconds
     function pollLockStatus() {
-        fetch(getLockStatusUrl)
+        fetch(url + "api/lock-status")
             .then((response) => response.json())
             .then((data) => {
                 updateLockUI(data.is_locked);
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Send a request to update the lock status
     toggleLock.addEventListener("change", function () {
         const isLocked = toggleLock.checked;
-        fetch(lockStatusUrl, {
+        fetch(url + "api/lock-status", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -20,13 +20,8 @@
         </svg>
     </div>
     <div id="footer-right">
-        <form method="POST" action="{{ url_for('index') }}">
+        <form id="index-form" method="POST" action="{{ url_for('index') }}">
             <button id="button-end-shift" class="button-footer">Exit &#10005</button>
         </form>
     </div>
 </div>
-
-<script>
-    const lockStatusUrl = "{{ url_for('index') }}";
-    const getLockStatusUrl = "{{ url_for('get_lock_status') }}";
-</script>
