@@ -31,14 +31,14 @@ def create_default_context() -> dict:
     return context
 
 
-@app.route("/api/lock-status", methods=["GET"])
+@app.route("/api-lock-status", methods=["GET"])
 def get_lock_status():
     """Endpoint to check the lock status."""
 
     return jsonify(backend.lock_status)
 
 
-@app.route("/api/lock-status", methods=["POST"])
+@app.route("/api-lock-status", methods=["POST"])
 def set_lock_status():
     """Endpoint to update the lock status."""
 
@@ -60,7 +60,7 @@ def set_lock_status():
     return jsonify({"error": "Invalid data"}), 400
 
 
-@app.route("/api/weld-data", methods=["GET"])
+@app.route("/api-weld-data", methods=["GET"])
 def get_weld_data():
     """Endpoint to get the weld data."""
 
