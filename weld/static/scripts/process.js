@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    var url = document.getElementById('index-form').action
 
     async function updateData() {
         try {
-            const response = await fetch(weldStatusUrl); 
+            const response = await fetch(url + 'api/weld-data');
             const data = await response.json();
             const partNumber = document.getElementById('partNumber');
             const leftWeldCount = document.getElementById('leftWeldCount');
