@@ -27,6 +27,6 @@
 </div>
 
 <script>
-    const lockStatusUrl = "{{ url_for('set_lock_status') }}";
-    const getLockStatusUrl = "{{ url_for('get_lock_status') }}";
+    const lockStatusUrl = "{{ ApplicationRoot }}{{ url_for('set_lock_status') }}";
+    const getLockStatusUrl = "{{ ApplicationRoot }}{{ url_for('get_lock_status') }}";
 </script>

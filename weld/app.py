@@ -2,10 +2,11 @@ import sys
 import logging
 import time
 
-from flask import render_template, request, jsonify, redirect, url_for, current_app as app
+from flask import Flask, render_template, request, jsonify, redirect, url_for, current_app
 
 from weld import backend
 
+app = Flask(__name__)
 
 def create_default_context() -> dict:
     """Creates a default content for all the information that will be displayed to the Frontend.
@@ -24,6 +25,7 @@ def create_default_context() -> dict:
         "ActualPartNumber": None,
         "ActualLeftWelds": None,
         "ActualRightWelds": None,
+        "ApplicationRoot": app.config["APPLICATION_ROOT"],
         "route": "/",
     }
     return context
