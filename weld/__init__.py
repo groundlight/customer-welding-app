@@ -1,6 +1,5 @@
 import os
 
-from flask import Flask, Blueprint
 from weld.app import app
 
 

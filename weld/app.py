@@ -25,7 +25,6 @@ def create_default_context() -> dict:
         "ActualPartNumber": None,
         "ActualLeftWelds": None,
         "ActualRightWelds": None,
-        "ApplicationRoot": app.config["APPLICATION_ROOT"],
         "route": "/",
     }
     return context
