@@ -1,44 +1,29 @@
-"""Pydantic models for settings and API status."""
-
-import sys
-import yaml
+import os
 import logging
-
-from pathlib import Path
-from pydantic import BaseModel, ValidationError
 
 logger = logging.getLogger(__name__)
 
-
-class ML(BaseModel):
-    detector_name: str  # Name of the detector
-    query: str  # Query question for the detector
-    confidence_threshold: (
-        float  # Confidence threshold for ML resporting confident or unclear answer
-    )
-    trigger_interval_seconds: int  # Time between each image query
-
-
-class Timeout(BaseModel):
-    ml_api_timeout_seconds: int  # ML timeout in seconds before continuing
+"""Load Environment Variables"""
+WELD_APP_PRINTER_IP = os.getenv("WELD_APP_PRINTER_IP")  # Tag Printer IP
+WELD_APP_PRINTER_PORT = os.getenv("WELD_APP_PRINTER_PORT")  # Tag Printer Port
+WELD_APP_PRINTER_TIMEOUT = os.getenv("WELD_APP_PRINTER_TIMEOUT", 5)  # Tag Printer Timeout, default 5 seconds
+WELD_APP_PRINTER_PAPER_WIDTH = os.getenv("WELD_APP_PRINTER_PAPER_WIDTH", 2.25)  # Tag Printer Paper Width, default 2.25 inches
+WELD_APP_PRINTER_PAPER_LENGTH = os.getenv("WELD_APP_PRINTER_PAPER_LENGTH", 4.00)  # Tag Printer Paper Length, default 4.00 inches
+WELD_APP_PRINTER_DPI = os.getenv("WELD_APP_PRINTER_DPI", 203)  # Tag Printer DPI, default 203
 
 
-class Settings(BaseModel):
-    ml: ML
-    timeout: Timeout
+def check_environment_variables() -> bool:
+    """Check if all the required environment variables are set.
 
-
-def load_settings(file_path: str) -> Settings:
-    """Load settings from YAML file
-
-    Returns pydantic validated data structure
+    Returns:
+        bool: True if all the environment variables are set, False otherwise.
     """
 
-    path = Path(file_path)
-    try:
-        with path.open("r") as file:
-            data = yaml.safe_load(file)
-        return Settings(**data)
-    except ValidationError as e:
-        logger.error(f"Load config failed: ", exc_info=True)
-        sys.exit(1)
+    return (
+        WELD_APP_PRINTER_IP
+        and WELD_APP_PRINTER_PORT
+        and WELD_APP_PRINTER_TIMEOUT
+        and WELD_APP_PRINTER_PAPER_WIDTH
+        and WELD_APP_PRINTER_PAPER_LENGTH
+        and WELD_APP_PRINTER_DPI
+    )

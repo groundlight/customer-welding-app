@@ -4,9 +4,17 @@ import time
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for, current_app
 
-from weld import backend
+from weld import backend, config
 
 app = Flask(__name__)
+
+if not config.check_environment_variables():
+    app.logger.error("Environment variables are not set. Exiting...")
+    sys.exit(1)
+
+"""Initialize all backend services"""
+printer_service = backend.PrinterService()
+
 
 def create_default_context() -> dict:
     """Creates a default content for all the information that will be displayed to the Frontend.
@@ -25,7 +33,7 @@ def create_default_context() -> dict:
         "ActualPartNumber": None,
         "ActualLeftWelds": None,
         "ActualRightWelds": None,
-        "route": "/",
+        "Error": None,
     }
     return context
 
@@ -220,7 +228,16 @@ def print_tag():
             }
         )
 
-        # TODO: Call backend to print the receipt
+        if not printer_service.print_tag(
+            shift=int(shift_number),
+            jig=int(jig_number),
+            part_number=part_number,
+            left_count=int(actual_left_welds),
+            right_count=int(actual_right_welds),
+            left_welder=left_welder,
+            right_welder=right_welder,
+        ):
+            context["Error"] = "Failed to print the tag. Please try again."
 
         return render_template("print.html", **context)
 
