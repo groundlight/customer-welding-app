@@ -1,6 +1,7 @@
 import logging
 import socket
 import datetime
+from groundlight import Groundlight
 
 from weld import config
 
@@ -8,6 +9,36 @@ logger = logging.getLogger(__name__)
 
 # Global lock status
 lock_status = {"is_locked": False}
+
+
+class WeldCountService:
+    """Service to send ML request to Groundlight and count the number of welds."""
+
+    def __init__(self) -> None:
+        self.gl = Groundlight()
+        self.detector = self.gl.get_detector(id=config.WELD_APP_ML_DETECTOR_ID)
+        self.weld_data = {
+            "partNumber": None,
+            "leftWeldCount": 0,
+            "rightWeldCount": 0,
+        }
+
+    def get_weld_data(self) -> dict:
+        return self.weld_data
+
+    def start_weld_count(self, part_number: str, jig_number: int) -> None:
+        """Start the weld count for the given part number.
+
+        Args:
+            part_number (str): Part number to start the weld count.
+            jig_number (int): Jig number for the weld (to determine the RTSP camera for ML).
+        """
+
+        self.weld_data["partNumber"] = part_number
+        self.weld_data["leftWeldCount"] = 0
+        self.weld_data["rightWeldCount"] = 0
+
+        # TODO: Call the Groundlight API to start the weld count using another thread
 
 
 class PrinterService:

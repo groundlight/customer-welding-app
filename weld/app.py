@@ -14,6 +14,7 @@ if not config.check_environment_variables():
 
 """Initialize all backend services"""
 printer_service = backend.PrinterService()
+weld_count_service = backend.WeldCountService()
 
 
 def create_default_context() -> dict:
@@ -71,14 +72,7 @@ def set_lock_status():
 def get_weld_data():
     """Endpoint to get the weld data."""
 
-    # TODO: Call backend to get the weld data
-
-    data = {
-        "partNumber": "0123456789",
-        "leftWeldCount": 20,
-        "rightWeldCount": 20,
-    }
-    return jsonify(data)
+    return jsonify(weld_count_service.get_weld_data())
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -146,7 +140,8 @@ def process():
             }
         )
 
-        # TODO: Call backend to start the ML to count the welds
+        # Start weld count ML
+        weld_count_service.start_weld_count(part_number=part_number, jig_number=int(jig_number))
 
         return render_template("process.html", **context)
 

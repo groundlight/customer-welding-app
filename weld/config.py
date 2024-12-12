@@ -4,6 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 """Load Environment Variables"""
+WELD_APP_ML_DETECTOR_ID = os.getenv("WELD_APP_ML_DETECTOR_ID")  # ML Detector ID
 WELD_APP_PRINTER_IP = os.getenv("WELD_APP_PRINTER_IP")  # Tag Printer IP
 WELD_APP_PRINTER_PORT = int(os.getenv("WELD_APP_PRINTER_PORT"))  # Tag Printer Port
 WELD_APP_PRINTER_TIMEOUT = int(os.getenv("WELD_APP_PRINTER_TIMEOUT", 5))  # Tag Printer Timeout, default 5 seconds
@@ -20,7 +21,8 @@ def check_environment_variables() -> bool:
     """
 
     return (
-        WELD_APP_PRINTER_IP
+        WELD_APP_ML_DETECTOR_ID
+        and WELD_APP_PRINTER_IP
         and WELD_APP_PRINTER_PORT
         and WELD_APP_PRINTER_TIMEOUT
         and WELD_APP_PRINTER_PAPER_WIDTH
