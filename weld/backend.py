@@ -117,6 +117,8 @@ class PrinterService:
         """
 
         try:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.settimeout(config.WELD_APP_PRINTER_TIMEOUT)
             self.sock.connect((self.printer_ip, self.printer_port))
             self.sock.send(zpl.encode())
             self.sock.close()
