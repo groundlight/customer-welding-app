@@ -5,11 +5,11 @@ logger = logging.getLogger(__name__)
 
 """Load Environment Variables"""
 WELD_APP_PRINTER_IP = os.getenv("WELD_APP_PRINTER_IP")  # Tag Printer IP
-WELD_APP_PRINTER_PORT = os.getenv("WELD_APP_PRINTER_PORT")  # Tag Printer Port
-WELD_APP_PRINTER_TIMEOUT = os.getenv("WELD_APP_PRINTER_TIMEOUT", 5)  # Tag Printer Timeout, default 5 seconds
-WELD_APP_PRINTER_PAPER_WIDTH = os.getenv("WELD_APP_PRINTER_PAPER_WIDTH", 2.25)  # Tag Printer Paper Width, default 2.25 inches
-WELD_APP_PRINTER_PAPER_LENGTH = os.getenv("WELD_APP_PRINTER_PAPER_LENGTH", 4.00)  # Tag Printer Paper Length, default 4.00 inches
-WELD_APP_PRINTER_DPI = os.getenv("WELD_APP_PRINTER_DPI", 203)  # Tag Printer DPI, default 203
+WELD_APP_PRINTER_PORT = int(os.getenv("WELD_APP_PRINTER_PORT"))  # Tag Printer Port
+WELD_APP_PRINTER_TIMEOUT = int(os.getenv("WELD_APP_PRINTER_TIMEOUT", 5))  # Tag Printer Timeout, default 5 seconds
+WELD_APP_PRINTER_PAPER_WIDTH = float(os.getenv("WELD_APP_PRINTER_PAPER_WIDTH", 2.25))  # Tag Printer Paper Width, default 2.25 inches
+WELD_APP_PRINTER_PAPER_LENGTH = float(os.getenv("WELD_APP_PRINTER_PAPER_LENGTH", 4.00))  # Tag Printer Paper Length, default 4.00 inches
+WELD_APP_PRINTER_DPI = int(os.getenv("WELD_APP_PRINTER_DPI", 203))  # Tag Printer DPI, default 203
 
 
 def check_environment_variables() -> bool:
