@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{url_for('static', filename='styles/styles.css')}}">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<html>
+
+<head>
+    <title>Weld Count - Groundlight Weld Counter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
+    <!--Scripts-->
+    <!--Loading Script-->
+    <script src="{{url_for('static', filename='scripts/loading.js')}}"></script>
+    <!--Jig Lock Script-->
+    <script src="{{url_for('static', filename='scripts/jig-lock.js')}}"></script>
+    <!--Print Script-->
+    <script src="{{url_for('static', filename='scripts/print.js')}}"></script>
+</head>
+
+<body>
+    <!--Header Bar-->
+    {% include 'header.html' %}
+
+    <div id="content" class="content">
+
+        <form action="{{ url_for('part') }}" method="POST">
+
+            <!--Review Section-->
+            <div class="content-center">
+                <div class="vertical-group">
+                    <svg width="46" height="47" viewBox="0 0 46 47" fill="none" style="align-self: center;"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M23 0.5C10.35 0.5 0 10.85 0 23.5C0 36.15 10.35 46.5 23 46.5C35.65 46.5 46 36.15 46 23.5C46 10.85 35.65 0.5 23 0.5ZM18.4 35L6.9 23.5L10.143 20.257L18.4 28.491L35.857 11.034L39.1 14.3L18.4 35Z"
+                            fill="#00B21E" />
+                    </svg>
+                    <p>Tag Printed</p>
+                </div>
+            </div>
+
+            <!-- Hidden Inputs to Preserve Previous Data -->
+            <input type="hidden" name="left_welder" value="{{ LeftWelder }}">
+            <input type="hidden" name="right_welder" value="{{ RightWelder }}">
+            <input type="hidden" name="jig_number" value="{{ JigNumber }}">
+            <input type="hidden" name="shift_number" value="{{ ShiftNumber }}">
+
+            <!--Line Separator-->
+            <hr class="separator">
+
+            <!--Submit Button-->
+            <div class="button-container">
+                <button id="restart-button" class="start-button">
+                    Start Another Part
+                    <svg xmlns="http://www.w3.org/2000/svg" class="play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                    <div class="keyboard-hint">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="keyboard-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M20 7v10H4V7h16m0-2H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2zm0 3h2v2h-2zM8 8h2v2H8zm0 3h2v2H8zm-3 0h2v2H5zm0-3h2v2H5zm3 6h8v2H8zm6-3h2v2h-2zm0-3h2v2h-2zm3 3h2v2h-2zm0-3h2v2h-2z">
+                            </path>
+                        </svg>
+                        <span class="keyboard-text">Enter</span>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="loading" class="loading"></div>
+
+    <!--Footer Bar-->
+    {% include 'footer.html' %}
+</body>
+
+</html>

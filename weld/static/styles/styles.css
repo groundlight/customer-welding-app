@@ -1,0 +1,405 @@
+/* Default Font */
+* {
+    font-size: 25px;
+    font-family: "Barlow", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}
+
+p {
+    font-size: 30px;
+}
+
+b {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Body Style: Using Groundlight */
+body {
+    margin: 0;
+    padding: 0;
+    background: rgb(239, 242, 244);
+    color: black;
+}
+
+/* Header Bar */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 15px 0px;
+    background-color: #0D004D;
+    color: white;
+}
+
+#header-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 3%;
+    font-weight: bold;
+}
+
+#header-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 3%;
+}
+
+/* Footer Bar */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0px;
+    background-color: #C8CDD3;
+    font-size: 15px;
+    color: white;
+}
+
+#footer-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 3%;
+}
+
+#footer-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#lock-text {
+    width: 100px;
+    font-size: 16px;
+    color: #49494D;
+    text-align: center;
+}
+
+#footer-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 3%;
+}
+
+/* Content Page */
+.content {
+    margin: 40px 6%;
+}
+
+.horizontal-group {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.horizontal-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.vertical-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group:last-child {
+    margin-right: 0;
+}
+
+.text-box,
+.dropdown {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+.text-box-weld {
+    box-sizing: border-box;
+    width: 100px;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+label {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.small-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #666;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#total-welds {
+    box-sizing: border-box;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+.content-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weld-info {
+    display: table;
+    margin-top: 15%;
+}
+
+.row {
+    display: table-row;
+}
+
+.title,
+.number {
+    display: table-cell;
+    padding: 5px 10px;
+}
+
+.title {
+    font-weight: normal;
+    text-align: right;
+}
+
+.number {
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Separator */
+.separator {
+    height: 2px;
+    margin: 20px 0px 40px 0px;
+    background: #ccc;
+    border: 0;
+}
+
+/* Buttons */
+.button-footer {
+    display: inline-block;
+    margin: auto;
+    padding: 15px 20px;
+    background-color: #919599;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.button-footer:active {
+    background-color: #323335;
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.start-button {
+    position: relative;
+    margin: auto;
+    padding: 30px 60px;
+    background-color: #0450BA;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    font-size: 40px;
+    color: white;
+    text-align: center;
+}
+
+.start-button:active {
+    background-color: #033882;
+}
+
+.decrement,
+.increment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 50px;
+    background-color: #808080;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    font-size: 40px;
+    color: white;
+}
+
+/* Images */
+#logo-image {
+    width: auto;
+    height: 30px;
+    margin-right: 10px;
+}
+
+/* SVGs */
+.play-icon {
+    fill: white;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.keyboard-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: rgb(200, 200, 200);
+    text-align: center;
+}
+
+.keyboard-icon {
+    fill: rgb(200, 200, 200);
+    width: 24px;
+    height: 24px;
+}
+
+.keyboard-text {
+    margin-top: 2px;
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+}
+
+/* Jig Lock Switch */
+.switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: 0.4s;
+    background-color: grey;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    width: 19px;
+    height: 19px;
+    transition: 0.4s;
+    background-color: white;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:checked+.slider:before {
+    transform: translateX(25px);
+}
+
+#lock-status {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Error Messages */
+.error-message {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: red;
+}
+
+/* Loading */
+.loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    border: 16px solid rgb(14, 150, 255);
+    border-top: 16px solid rgb(14, 64, 204);
+    border-radius: 50%;
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Submission Form */

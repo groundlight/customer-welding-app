@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{url_for('static', filename='styles/styles.css')}}">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<html>
+
+<head>
+    <title>Review - Groundlight Weld Counter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
+    <!--Scripts-->
+    <!--Loading Script-->
+    <script src="{{url_for('static', filename='scripts/loading.js')}}"></script>
+    <!--Jig Lock Script-->
+    <script src="{{url_for('static', filename='scripts/jig-lock.js')}}"></script>
+    <!--Review Script-->
+    <script src="{{url_for('static', filename='scripts/review.js')}}"></script>
+</head>
+
+<body>
+    <!--Header Bar-->
+    {% include 'header.html' %}
+
+    <div id="content" class="content">
+
+        <form action="{{ url_for('print_tag') }}" method="POST">
+
+            <b>Please review the information and click 'Print Tag' to continue</b>
+
+            <!--Line Separator-->
+            <hr class="separator">
+
+            <!--Input Section-->
+            <div class="vertical-group">
+                <div class="input-group">
+                    <label for="part-number">Part Number</label>
+                    <span class="error-message" id="error-part-number"></span>
+                    <input type="text" id="part-number" class="text-box" name="actual_part_number"
+                        value="{{ PartNumber }}">
+                </div>
+            </div>
+            <div class="horizontal-group">
+                <!-- Left Welds -->
+                <div class="input-group">
+                    <label>Left Welds</label>
+                    <div class="control-group">
+                        <div class="input-wrapper">
+                            <label class="small-label" for="expected-left-welds">Expected</label>
+                            <span class="text-box-weld" id="expected-left-welds">{{ ExpectedLeftWelds }}</span>
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="small-label" for="left-welds">Actual</label>
+                            <div class="horizontal-wrapper">
+                                <input type="number" id="left-welds" class="text-box-weld" name="actual_left_welds"
+                                    value="{{ ActualLeftWelds }}" min="0" max="200">
+                                <button class="decrement" data-target="left">-</button>
+                                <button class="increment" data-target="left">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Welds -->
+                <div class="input-group">
+                    <label>Right Welds</label>
+                    <div class="control-group">
+                        <div class="input-wrapper">
+                            <label class="small-label" for="expected-right-welds">Expected</label>
+                            <span class="text-box-weld" id="expected-right-welds">{{ ExpectedRightWelds }}</span>
+                        </div>
+                        <div class="input-wrapper">
+                            <label class="small-label" for="right-welds">Actual</label>
+                            <div class="horizontal-wrapper">
+                                <input type="number" id="right-welds" class="text-box-weld" name="actual_right_welds"
+                                    value="{{ ActualRightWelds }}" min="0" max="200">
+                                <button class="decrement" data-target="right">-</button>
+                                <button class="increment" data-target="right">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Welds -->
+                <div class="input-group">
+                    <label>Total</label>
+                    <div class="horizontal-group">
+                        <!-- Expected Welds -->
+                        <div class="input-wrapper">
+                            <label class="small-label" for="expected-total-welds">Expected</label>
+                            <span class="text-box-weld" id="expected-total-welds">0</span>
+                        </div>
+                        <!-- Actual Welds -->
+                        <div class="input-wrapper">
+                            <label class="small-label" for="total-welds">Actual</label>
+                            <span class="text-box-weld" id="total-welds">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Line Separator-->
+            <hr class="separator">
+
+            <!-- Hidden Inputs to Preserve Previous Data -->
+            <input type="hidden" name="left_welder" value="{{ LeftWelder }}">
+            <input type="hidden" name="right_welder" value="{{ RightWelder }}">
+            <input type="hidden" name="jig_number" value="{{ JigNumber }}">
+            <input type="hidden" name="shift_number" value="{{ ShiftNumber }}">
+            <input type="hidden" name="part_number" value="{{ PartNumber }}">
+            <input type="hidden" name="expected_left_welds" value="{{ ExpectedLeftWelds }}">
+            <input type="hidden" name="expected_right_welds" value="{{ ExpectedRightWelds }}">
+
+            <!--Submit Button-->
+            <div class="button-container">
+                <button id="print-tag-button" class="start-button">
+                    Print Tag
+                    <svg xmlns="http://www.w3.org/2000/svg" class="play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                    <div class="keyboard-hint">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="keyboard-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M20 7v10H4V7h16m0-2H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2zm0 3h2v2h-2zM8 8h2v2H8zm0 3h2v2H8zm-3 0h2v2H5zm0-3h2v2H5zm3 6h8v2H8zm6-3h2v2h-2zm0-3h2v2h-2zm3 3h2v2h-2zm0-3h2v2h-2z">
+                            </path>
+                        </svg>
+                        <span class="keyboard-text">Enter</span>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="loading" class="loading"></div>
+
+    <!--Footer Bar-->
+    {% include 'footer.html' %}
+</body>
+
+</html>

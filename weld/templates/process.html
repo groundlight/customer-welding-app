@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{url_for('static', filename='styles/styles.css')}}">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<html>
+
+<head>
+    <title>Weld Count - Groundlight Weld Counter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
+    <!--Scripts-->
+    <!--Loading Script-->
+    <script src="{{url_for('static', filename='scripts/loading.js')}}"></script>
+    <!--Jig Lock Script-->
+    <script src="{{url_for('static', filename='scripts/jig-lock.js')}}"></script>
+    <!--Process Script-->
+    <script src="{{url_for('static', filename='scripts/process.js')}}"></script>
+</head>
+
+<body>
+    <!--Header Bar-->
+    {% include 'header.html' %}
+
+    <div id="content" class="content">
+
+        <form action="{{ url_for('review') }}" method="POST">
+
+            <b>Please start welding and click 'Review and Print Tag' when done</b>
+
+            <!--Review Section-->
+            <div class="content-center">
+                <div class="weld-info">
+                    <div class="row">
+                        <div class="title">Part Number:</div>
+                        <div class="number" id="partNumber">Loading...</div>
+                    </div>
+                    <div class="row">
+                        <div class="title">Left Weld Count:</div>
+                        <div class="number" id="leftWeldCount">Loading...</div>/{{ ExpectedLeftWelds }}
+                    </div>
+                    <div class="row">
+                        <div class="title">Right Weld Count:</div>
+                        <div class="number" id="rightWeldCount">Loading...</div>/{{ ExpectedRightWelds }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden Inputs to Preserve Previous Data -->
+            <input type="hidden" name="left_welder" value="{{ LeftWelder }}">
+            <input type="hidden" name="right_welder" value="{{ RightWelder }}">
+            <input type="hidden" name="jig_number" value="{{ JigNumber }}">
+            <input type="hidden" name="shift_number" value="{{ ShiftNumber }}">
+            <input type="hidden" name="part_number" value="{{ PartNumber }}">
+            <input type="hidden" name="expected_left_welds" value="{{ ExpectedLeftWelds }}">
+            <input type="hidden" name="expected_right_welds" value="{{ ExpectedRightWelds }}">
+            <input type="hidden" id="actual_left_welds" name="actual_left_welds" value="0">
+            <input type="hidden" id="actual_right_welds" name="actual_right_welds" value="0">
+
+            <!--Submit Button-->
+            <div class="button-container">
+                <button id="review-button" class="start-button">
+                    Review and Print Tag
+                    <svg xmlns="http://www.w3.org/2000/svg" class="play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                    <div class="keyboard-hint">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="keyboard-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M20 7v10H4V7h16m0-2H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2zm0 3h2v2h-2zM8 8h2v2H8zm0 3h2v2H8zm-3 0h2v2H5zm0-3h2v2H5zm3 6h8v2H8zm6-3h2v2h-2zm0-3h2v2h-2zm3 3h2v2h-2zm0-3h2v2h-2z">
+                            </path>
+                        </svg>
+                        <span class="keyboard-text">Enter</span>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="loading" class="loading"></div>
+
+    <!--Footer Bar-->
+    {% include 'footer.html' %}
+
+</body>
+
+</html>

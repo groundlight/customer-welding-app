@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{url_for('static', filename='styles/styles.css')}}">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<html>
+
+<head>
+    <title>Home - Groundlight Weld Counter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
+    <!--Scripts-->
+    <!--Loading Script-->
+    <script src="{{url_for('static', filename='scripts/loading.js')}}"></script>
+    <!--Jig Lock Script-->
+    <script src="{{url_for('static', filename='scripts/jig-lock.js')}}"></script>
+    <!--Start Shift Script-->
+    <script src="{{url_for('static', filename='scripts/start-shift.js')}}"></script>
+</head>
+
+<body>
+    <!--Header Bar-->
+    {% include 'header.html' %}
+
+    <div id="content" class="content">
+        <!--Input Section-->
+        <form action="{{ url_for('part') }}" method="POST">
+            <div class="horizontal-group">
+                <div class="input-group">
+                    <label for="jig-number">Jig Number</label>
+                    <span class="error-message" id="error-jig-number"></span>
+                    <select id="jig-number" class="dropdown" name="jig_number">
+                        {% for i in range(1, 11) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="shift-number">Shift Number</label>
+                    <span class="error-message" id="error-shift-number"></span>
+                    <select id="shift-number" class="dropdown" name="shift_number">
+                        {% for i in range(1, 6) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="vertical-group">
+                <div class="input-group">
+                    <label for="left-welder">Name of Left Welder</label>
+                    <span class="error-message" id="error-left-welder"></span>
+                    <input type="text" id="left-welder" class="text-box" name="left_welder"
+                        placeholder="Enter Left Welder Name">
+                </div>
+                <div class="input-group">
+                    <label for="right-welder">Name of Right Welder</label>
+                    <span class="error-message" id="error-right-welder"></span>
+                    <input type="text" id="right-welder" class="text-box" name="right_welder"
+                        placeholder="Enter Right Welder Name">
+                </div>
+            </div>
+            <!--Line Separator-->
+            <hr class="separator">
+            <!--Submit Button-->
+            <div class="button-container">
+                <button id="start-shift-button" class="start-button" type="submit">
+                    Start Shift
+                    <svg xmlns="http://www.w3.org/2000/svg" class="play-icon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                    <div class="keyboard-hint">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="keyboard-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M20 7v10H4V7h16m0-2H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2zm0 3h2v2h-2zM8 8h2v2H8zm0 3h2v2H8zm-3 0h2v2H5zm0-3h2v2H5zm3 6h8v2H8zm6-3h2v2h-2zm0-3h2v2h-2zm3 3h2v2h-2zm0-3h2v2h-2z">
+                            </path>
+                        </svg>
+                        <span class="keyboard-text">Enter</span>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="loading" class="loading"></div>
+
+    <!--Footer Bar-->
+    {% include 'footer.html' %}
+</body>
+
+</html>

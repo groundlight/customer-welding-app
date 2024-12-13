@@ -1,0 +1,7 @@
+name: "welding-app"
+description: "Weld Count Checking and Tag Printing App"
+version: "1.0.0"
+runtime:
+  kind: "poetry"
+  working_dir: "."
+entrypoint: "poetry run python run.py"
