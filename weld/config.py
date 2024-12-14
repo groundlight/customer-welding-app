@@ -1,31 +1,89 @@
 import os
+import sys
 import logging
+from pydantic import Field, BaseModel
 
 logger = logging.getLogger(__name__)
 
-"""Load Environment Variables"""
-WELD_APP_ML_DETECTOR_ID = os.getenv("WELD_APP_ML_DETECTOR_ID")  # ML Detector ID
-WELD_APP_PRINTER_IP = os.getenv("WELD_APP_PRINTER_IP")  # Tag Printer IP
-WELD_APP_PRINTER_PORT = int(os.getenv("WELD_APP_PRINTER_PORT"))  # Tag Printer Port
-WELD_APP_PRINTER_TIMEOUT = int(os.getenv("WELD_APP_PRINTER_TIMEOUT", 5))  # Tag Printer Timeout, default 5 seconds
-WELD_APP_PRINTER_PAPER_WIDTH = float(os.getenv("WELD_APP_PRINTER_PAPER_WIDTH", 2.25))  # Tag Printer Paper Width, default 2.25 inches
-WELD_APP_PRINTER_PAPER_LENGTH = float(os.getenv("WELD_APP_PRINTER_PAPER_LENGTH", 4.00))  # Tag Printer Paper Length, default 4.00 inches
-WELD_APP_PRINTER_DPI = int(os.getenv("WELD_APP_PRINTER_DPI", 203))  # Tag Printer DPI, default 203
+SAMPLE_APP_CONFIG = """
+{
+    "ml_detector_id": "my-detector-id",
+    "printer": {
+        "printer_ip": "IP_ADDRESS",
+        "printer_port": 9100,
+        "printer_timeout": 5,
+        "printer_paper_width": 2.25,
+        "printer_paper_length": 4.0,
+        "printer_dpi": 300
+    }
+}
+"""
+
+SAMPLE_APP_CAMERA_CONFIG = """
+{
+    "jig_stations": {
+        "1": {
+            "camera_config": "  name: Jig Station 1 Camera
+                                input_type: rtsp
+                                id:
+                                    rtsp_url: rtsp://
+                                options:
+                                    resolution:
+                                        height: 720
+                                        width: 1280
+                                    zoom:
+                                        digital: 1.5"
+        }
+        "2": {
+            "camera_config": "  name: Jig Station 2 Camera
+                                input_type: rtsp
+                                id:
+                                    rtsp_url: rtsp://
+                                options:
+                                    resolution:
+                                        height: 720
+                                        width: 1280
+                                    zoom:
+                                        digital: 1.5"
+        }
+    }
+}
+"""
+
+app_config_raw = os.getenv("WELD_APP_CONFIG", SAMPLE_APP_CONFIG)
+app_config = None
+
+camera_config_raw = os.getenv("WELD_APP_CAMERA_CONFIG", SAMPLE_APP_CAMERA_CONFIG)
+camera_config = None
 
 
-def check_environment_variables() -> bool:
-    """Check if all the required environment variables are set.
+class PrinterConfig(BaseModel):
+    printer_ip: str = Field(..., description="Tag Printer IP")
+    printer_port: int = Field(..., description="Tag Printer Port")
+    printer_timeout: int = Field(5, description="Tag Printer Timeout in seconds, default 5")
+    printer_paper_width: float = Field(2.25, description="Tag Printer Paper Width in inches, default 2.25")
+    printer_paper_length: float = Field(4.00, description="Tag Printer Paper Length in inches, default 4.00")
+    printer_dpi: int = Field(203, description="Tag Printer DPI, default 203")
 
-    Returns:
-        bool: True if all the environment variables are set, False otherwise.
-    """
 
-    return (
-        WELD_APP_ML_DETECTOR_ID
-        and WELD_APP_PRINTER_IP
-        and WELD_APP_PRINTER_PORT
-        and WELD_APP_PRINTER_TIMEOUT
-        and WELD_APP_PRINTER_PAPER_WIDTH
-        and WELD_APP_PRINTER_PAPER_LENGTH
-        and WELD_APP_PRINTER_DPI
-    )
+class AppConfig(BaseModel):
+    ml_detector_id: str = Field(..., description="ML Detector ID")
+    printer: PrinterConfig
+
+
+class JigStationConfig(BaseModel):
+    camera_config: str = Field(..., description="Raw camera configuration string for use in FrameGrab")
+
+
+class AppCameraConfig(BaseModel):
+    jig_stations: dict[int, JigStationConfig] = Field(..., description="Mapping of jig stations to their raw camera configuration strings")
+
+
+# Load configuration
+try:
+    app_config = AppConfig.model_validate_json(app_config_raw)
+    camera_config = JigStationConfig.model_validate_json(camera_config_raw)
+    logger.info("Configuration loaded successfully!")
+except Exception as e:
+    logger.error(f"Error loading configuration: {e}", exc_info=True)
+    sys.exit(1)

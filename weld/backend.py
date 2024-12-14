@@ -3,7 +3,7 @@ import socket
 import datetime
 from groundlight import Groundlight
 
-from weld import config
+from weld.config import app_config
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class WeldCountService:
 
     def __init__(self) -> None:
         self.gl = Groundlight()
-        self.detector = self.gl.get_detector(id=config.WELD_APP_ML_DETECTOR_ID)
+        self.detector = self.gl.get_detector(id=app_config.ml_detector_id)
         self.weld_data = {
             "partNumber": None,
             "leftWeldCount": 0,
@@ -46,10 +46,10 @@ class PrinterService:
 
     def __init__(self) -> None:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.settimeout(config.WELD_APP_PRINTER_TIMEOUT)
+        self.sock.settimeout(app_config.printer.printer_timeout)
 
-        self.printer_ip = config.WELD_APP_PRINTER_IP
-        self.printer_port = int(config.WELD_APP_PRINTER_PORT)
+        self.printer_ip = app_config.printer.printer_ip
+        self.printer_port = int(app_config.printer.printer_port)
 
     def _create_tag(
         self,
@@ -61,9 +61,9 @@ class PrinterService:
         right_count: int,
         left_welder: str,
         right_welder: str,
-        width: float = config.WELD_APP_PRINTER_PAPER_WIDTH,
-        length: float = config.WELD_APP_PRINTER_PAPER_LENGTH,
-        dpi: int = config.WELD_APP_PRINTER_DPI,
+        width: float = app_config.printer.printer_paper_width,
+        length: float = app_config.printer.printer_paper_length,
+        dpi: int = app_config.printer.printer_dpi,
     ) -> str:
         """
         Create a ZPL string to print the formatted tag with consistent font size and dynamic centering.
@@ -149,7 +149,7 @@ class PrinterService:
 
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.settimeout(config.WELD_APP_PRINTER_TIMEOUT)
+            self.sock.settimeout(app_config.printer.printer_timeout)
             self.sock.connect((self.printer_ip, self.printer_port))
             self.sock.send(zpl.encode())
             self.sock.close()

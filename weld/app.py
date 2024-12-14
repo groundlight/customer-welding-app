@@ -8,10 +8,6 @@ from weld import backend, config
 
 app = Flask(__name__)
 
-if not config.check_environment_variables():
-    app.logger.error("Environment variables are not set. Exiting...")
-    sys.exit(1)
-
 """Initialize all backend services"""
 printer_service = backend.PrinterService()
 weld_count_service = backend.WeldCountService()
