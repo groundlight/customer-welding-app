@@ -143,6 +143,7 @@ def process():
 
     else:
         # Redirect back to the index page if the request is not POST (no login information received)
+        weld_count_service.stop_weld_count()
         return redirect(url_for("index"))
 
 

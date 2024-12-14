@@ -22,7 +22,7 @@ SAMPLE_APP_CONFIG = """
 SAMPLE_APP_CAMERA_CONFIG = """
 {
     "jig_stations": {
-        "1": {
+        1: {
             "camera_config": "  name: Jig Station 1 Camera
                                 input_type: rtsp
                                 id:
@@ -34,7 +34,7 @@ SAMPLE_APP_CAMERA_CONFIG = """
                                     zoom:
                                         digital: 1.5"
         }
-        "2": {
+        2: {
             "camera_config": "  name: Jig Station 2 Camera
                                 input_type: rtsp
                                 id:
@@ -82,7 +82,7 @@ class AppCameraConfig(BaseModel):
 # Load configuration
 try:
     app_config = AppConfig.model_validate_json(app_config_raw)
-    camera_config = JigStationConfig.model_validate_json(camera_config_raw)
+    camera_config = AppCameraConfig.model_validate_json(camera_config_raw)
     logger.info("Configuration loaded successfully!")
 except Exception as e:
     logger.error(f"Error loading configuration: {e}", exc_info=True)

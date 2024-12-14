@@ -1,9 +1,11 @@
-import logging
 import socket
+import logging
 import datetime
+import threading
 from groundlight import Groundlight
+from framegrab import FrameGrabber
 
-from weld.config import app_config
+from weld.config import app_config, camera_config
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,10 @@ class WeldCountService:
             "rightWeldCount": 0,
         }
 
+        # Thread control
+        self.is_running = False
+        self.thread = None
+
     def get_weld_data(self) -> dict:
         return self.weld_data
 
@@ -38,7 +44,72 @@ class WeldCountService:
         self.weld_data["leftWeldCount"] = 0
         self.weld_data["rightWeldCount"] = 0
 
-        # TODO: Call the Groundlight API to start the weld count using another thread
+        self.is_running = True
+
+        # Call weld_count_thread with jig_number as a thread
+        if self.thread is not None or self.is_running:
+            logger.info("Stopping previous weld count thread")
+            self.is_running = False
+            self.thread.join()
+            self.thread = None
+
+        self.thread = threading.Thread(target=self.weld_count_thread, args=(jig_number,), daemon=True)
+
+    def stop_weld_count(self) -> None:
+        """Stop the weld count thread."""
+
+        self.is_running = False
+
+        if self.thread is not None:
+            self.thread.join()
+            self.thread = None
+
+            self.weld_data["partNumber"] = None
+            self.weld_data["leftWeldCount"] = 0
+            self.weld_data["rightWeldCount"] = 0
+
+    def weld_count_thread(self, jig_number: int) -> None:
+        """Thread to count the number of welds for the given jig number.
+
+        Args:
+            jig_number (int): Jig number for the weld (to determine the RTSP camera for ML).
+        """
+
+        # Get the camera configuration for the jig number
+        jig_camera_config = camera_config.jig_stations[jig_number].camera_config
+        grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
+
+        left_weld_has_flash = False
+        right_weld_has_flash = False
+
+        while self.is_running:
+            frame = grabber.grab()
+
+            # Cut the frame in half to get the left and right welds
+            half_width = frame.shape[1] // 2
+            left_frame = frame[:, :half_width]
+            right_frame = frame[:, half_width:]
+
+            # Send the left and right frames to the detector
+            iq_left = self.gl.ask_async(detector=self.detector, image=left_frame)
+            iq_right = self.gl.ask_async(detector=self.detector, image=right_frame)
+
+            # Poll for result
+            iq_left = self.gl.wait_for_confident_result(image_query=iq_left, timeout_sec=15)
+            iq_right = self.gl.wait_for_confident_result(image_query=iq_right, timeout_sec=15)
+
+            # Update the weld count
+            if iq_left.result.label == "YES" and not left_weld_has_flash:
+                self.weld_data["leftWeldCount"] += 1
+                left_weld_has_flash = True
+            else:
+                left_weld_has_flash = False
+
+            if iq_right.result.label == "YES" and not right_weld_has_flash:
+                self.weld_data["rightWeldCount"] += 1
+                right_weld_has_flash = True
+            else:
+                right_weld_has_flash = False
 
 
 class PrinterService:
