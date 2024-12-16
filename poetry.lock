@@ -306,13 +306,13 @@ files = [
 
 [[package]]
 name = "groundlight"
-version = "0.20.0"
+version = "0.21.1"
 description = "Build computer vision systems using natural language with Groundlight"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "groundlight-0.20.0-py3-none-any.whl", hash = "sha256:1a5ee7f6c0b45d0293a0cc6437dcf68f7681b753d4c6709179fb5d9715dbace0"},
-    {file = "groundlight-0.20.0.tar.gz", hash = "sha256:2be9e0399675d0eead7b45bf2bac5067b7d9b01391323a0cdb2b95a55d764f23"},
+    {file = "groundlight-0.21.1-py3-none-any.whl", hash = "sha256:b8f2c31a0af4e51016719f4b7dc825fc5cb7ba9fb46a0c965d0876d723d6a4dd"},
+    {file = "groundlight-0.21.1.tar.gz", hash = "sha256:f6b0edcb1f317f4b40620e210230adfcc89f5ee8822edb2f7327534862d003dd"},
 ]
 
 [package.dependencies]
@@ -1305,4 +1305,4 @@ xmlsec = ["xmlsec (>=0.6.1)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "597e2c7d7c3b3bf26d503872c2d78fc5c77911a1a7d6f1163131dc88173d8722"
+content-hash = "581f2556d562aa22dcbaa3b14de61360b64b11eac9e9bc1f04a46e7c7a85196b"
