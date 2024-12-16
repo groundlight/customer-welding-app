@@ -7,53 +7,35 @@ logger = logging.getLogger(__name__)
 
 SAMPLE_APP_CONFIG = """
 {
-    "ml_detector_id": "my-detector-id",
-    "printer": {
-        "printer_ip": "IP_ADDRESS",
-        "printer_port": 9100,
-        "printer_timeout": 5,
-        "printer_paper_width": 2.25,
-        "printer_paper_length": 4.0,
-        "printer_dpi": 300
+    \"ml_detector_id\": \"DETECTOR_ID\", 
+    \"printer\": {
+        \"printer_ip\": \"PRINTER_IP\", 
+        \"printer_port\": 9100, 
+        \"printer_timeout\": 5, 
+        \"printer_paper_width\": 2.25, 
+        \"printer_paper_length\": 4.0,
+        \"printer_dpi\": 300 
     }
 }
 """
 
 SAMPLE_APP_CAMERA_CONFIG = """
 {
-    "jig_stations": {
-        1: {
-            "camera_config": "  name: Jig Station 1 Camera
-                                input_type: rtsp
-                                id:
-                                    rtsp_url: rtsp://
-                                options:
-                                    resolution:
-                                        height: 720
-                                        width: 1280
-                                    zoom:
-                                        digital: 1.5"
-        }
-        2: {
-            "camera_config": "  name: Jig Station 2 Camera
-                                input_type: rtsp
-                                id:
-                                    rtsp_url: rtsp://
-                                options:
-                                    resolution:
-                                        height: 720
-                                        width: 1280
-                                    zoom:
-                                        digital: 1.5"
+    \"jig_stations\": {
+        \"1\": {
+            \"camera_config\": \"name: Jig Station 1 Camera\\ninput_type: rtsp\\nid:\\n  rtsp_url: RTSP_1\"
+        }, 
+        \"2\": {
+            \"camera_config\": \"name: Jig Station 2 Camera\\ninput_type: rtsp\\nid:\\n  rtsp_url: RTSP_2\"
         }
     }
 }
 """
 
-app_config_raw = os.getenv("WELD_APP_CONFIG", SAMPLE_APP_CONFIG)
+app_config_raw = os.getenv("WELD_APP_CONFIG", None)
 app_config = None
 
-camera_config_raw = os.getenv("WELD_APP_CAMERA_CONFIG", SAMPLE_APP_CAMERA_CONFIG)
+camera_config_raw = os.getenv("WELD_APP_CAMERA_CONFIG", None)
 camera_config = None
 
 
