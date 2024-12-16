@@ -76,6 +76,7 @@ def index():
     """Load the index page of the website with camera preview."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     return render_template("index.html", **context)
 
@@ -85,6 +86,7 @@ def part():
     """Load the part page of the website with camera preview."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -105,7 +107,7 @@ def part():
 
     else:
         # Redirect back to the index page if the request is not POST (no login information received)
-        return render_template("part.html", **context)
+        return redirect(url_for("index"))
 
 
 @app.route("/process", methods=["GET", "POST"])
@@ -113,6 +115,7 @@ def process():
     """Load the process page of the website with ML result."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -143,7 +146,6 @@ def process():
 
     else:
         # Redirect back to the index page if the request is not POST (no login information received)
-        weld_count_service.stop_weld_count()
         return redirect(url_for("index"))
 
 
@@ -152,6 +154,7 @@ def review():
     """Load the process page of the website with ML result."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -191,6 +194,7 @@ def print_tag():
     """Print the receipt of the welds."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
