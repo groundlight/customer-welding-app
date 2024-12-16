@@ -40,12 +40,6 @@ class WeldCountService:
             jig_number (int): Jig number for the weld (to determine the RTSP camera for ML).
         """
 
-        self.weld_data["partNumber"] = part_number
-        self.weld_data["leftWeldCount"] = 0
-        self.weld_data["rightWeldCount"] = 0
-
-        self.is_running = True
-
         # Call weld_count_thread with jig_number as a thread
         if self.thread is not None or self.is_running:
             logger.info("Stopping previous weld count thread")
@@ -53,7 +47,15 @@ class WeldCountService:
             self.thread.join()
             self.thread = None
 
+        self.weld_data["partNumber"] = part_number
+        self.weld_data["leftWeldCount"] = 0
+        self.weld_data["rightWeldCount"] = 0
+
+        self.is_running = True
+
+        logger.info(f"Starting weld count for part number: {part_number}")
         self.thread = threading.Thread(target=self.weld_count_thread, args=(jig_number,), daemon=True)
+        self.thread.start()
 
     def stop_weld_count(self) -> None:
         """Stop the weld count thread."""
@@ -64,10 +66,6 @@ class WeldCountService:
             self.thread.join()
             self.thread = None
 
-            self.weld_data["partNumber"] = None
-            self.weld_data["leftWeldCount"] = 0
-            self.weld_data["rightWeldCount"] = 0
-
     def weld_count_thread(self, jig_number: int) -> None:
         """Thread to count the number of welds for the given jig number.
 
@@ -77,26 +75,36 @@ class WeldCountService:
 
         # Get the camera configuration for the jig number
         jig_camera_config = camera_config.jig_stations[jig_number].camera_config
+
         grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
+        logger.debug(f"Initialized FrameGrab with camera config: {grabber.config}")
 
         left_weld_has_flash = False
         right_weld_has_flash = False
 
         while self.is_running:
-            frame = grabber.grab()
+            try:
+                frame = grabber.grab()
+            except Exception as e:
+                logger.error(f"Failed to grab frame: {e}", exc_info=True)
+                continue
 
             # Cut the frame in half to get the left and right welds
             half_width = frame.shape[1] // 2
             left_frame = frame[:, :half_width]
             right_frame = frame[:, half_width:]
 
-            # Send the left and right frames to the detector
-            iq_left = self.gl.ask_async(detector=self.detector, image=left_frame)
-            iq_right = self.gl.ask_async(detector=self.detector, image=right_frame)
+            try:
+                # Send the left and right frames to the detector
+                iq_left = self.gl.ask_async(detector=self.detector, image=left_frame)
+                iq_right = self.gl.ask_async(detector=self.detector, image=right_frame)
 
-            # Poll for result
-            iq_left = self.gl.wait_for_confident_result(image_query=iq_left, timeout_sec=15)
-            iq_right = self.gl.wait_for_confident_result(image_query=iq_right, timeout_sec=15)
+                # Poll for result
+                iq_left = self.gl.wait_for_ml_result(image_query=iq_left, timeout_sec=30)
+                iq_right = self.gl.wait_for_ml_result(image_query=iq_right, timeout_sec=30)
+            except Exception as e:
+                logger.error(f"Failed to get ML result: {e}", exc_info=True)
+                continue
 
             # Update the weld count
             if iq_left.result.label == "YES" and not left_weld_has_flash:
@@ -219,6 +227,7 @@ class PrinterService:
         """
 
         try:
+            logger.info(f"Sending data to the printer with IP: {self.printer_ip} and Port: {self.printer_port}")
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(app_config.printer.printer_timeout)
             self.sock.connect((self.printer_ip, self.printer_port))
@@ -228,6 +237,7 @@ class PrinterService:
             logger.error(f"Failed to send data to the printer: {e}", exc_info=True)
             return False
 
+        logger.info("Data sent to the printer successfully!")
         return True
 
     def print_tag(
