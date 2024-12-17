@@ -125,8 +125,12 @@ class WeldCountService:
     """Service to send ML request to Groundlight and count the number of welds."""
 
     def __init__(self) -> None:
-        # TODO: Makes this configurable to use edge-endpoint
-        self.gl = Groundlight()
+        if app_config.edge_endpoint is not None and app_config.edge_endpoint != "" and app_config.edge_endpoint != "None":
+            logger.info(f"Using edge-endpoint: {app_config.edge_endpoint}")
+            self.gl = Groundlight(endpoint=app_config.edge_endpoint)
+        else:
+            logger.info("Using default Groundlight endpoint")
+            self.gl = Groundlight()
         self.detector = self.gl.get_detector(id=app_config.ml_detector_id)
         self.weld_data = {
             "partNumber": None,
@@ -186,7 +190,7 @@ class WeldCountService:
 
         # Camera setup
         jig_camera_config = camera_config.jig_stations[jig_number].camera_config
-        grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
+        grabber = FrameGrabber.create_grabber(jig_camera_config)
         logger.debug(f"Initialized FrameGrab with camera config: {grabber.config}")
 
         # Flash states and counters

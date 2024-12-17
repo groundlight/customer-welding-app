@@ -49,12 +49,13 @@ class PrinterConfig(BaseModel):
 
 
 class AppConfig(BaseModel):
+    edge_endpoint: str | None = Field(None, description="The edge-endpoint IP address for local inference, default None for cloud inference")
     ml_detector_id: str = Field(..., description="ML Detector ID")
     printer: PrinterConfig
 
 
 class JigStationConfig(BaseModel):
-    camera_config: str = Field(..., description="Raw camera configuration string for use in FrameGrab")
+    camera_config: dict = Field(..., description="Camera configuration Dict for FrameGrab")
 
 
 class AppCameraConfig(BaseModel):
