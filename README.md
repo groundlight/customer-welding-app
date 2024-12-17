@@ -13,6 +13,7 @@ The app requires the following environment variables:
 
 ```json
 {
+    "edge_endpoint": "EDGE_ENDPOINT_URL_OR_NONE_TO_USE_CLOUD",
     "ml_detector_id": "WELD_DETECTOR_ID", 
     "printer": {
         "printer_ip": "TAG_PRINTER_IP", 
@@ -31,14 +32,46 @@ The app requires the following environment variables:
 {
     "jig_stations": {
         "1": {
-            "camera_config": "RTSP_CONFIGURATION_FRAMEGRAB_FORMAT"
+            "camera_config": {
+                "name": "Jig Station 1 Camera",
+                "input_type": "rtsp",
+                "id": {
+                    "rtsp_url": "RTSP_URL_HERE"
+                },
+                "options": {
+                    "keep_connection_open": true,
+                    "crop": {
+                        "relative": {
+                            "left": 0.0,
+                            "right": 1.0
+                        }
+                    }
+                }
+            }
         }, 
         "2": {
-            "camera_config": "RTSP_CONFIGURATION_FRAMEGRAB_FORMAT"
+            "camera_config": {
+                "name": "Jig Station 2 Camera",
+                "input_type": "rtsp",
+                "id": {
+                    "rtsp_url": "RTSP_URL_HERE"
+                },
+                "options": {
+                    "keep_connection_open": true,
+                    "crop": {
+                        "relative": {
+                            "left": 0.0,
+                            "right": 1.0
+                        }
+                    }
+                }
+            }
         }
     }
 }
 ```
+
+Each `camera_config` entries will need to match the configuration settings for `FrameGrab` so the cameras can be intiialized correctly.
 
 - `GROUNDLIGHT_API_TOKEN`: Groundlight API Token
 
