@@ -19,9 +19,10 @@ except ImportError:
 
 
 class SaturatingCounter:
-    """4-state 2-bit Saturating Counter."""
+    """2-state 1-bit Saturating Counter."""
 
     def __init__(self):
+        # Initialize the counter, increase states when needed
         self.state = 0  # Counter starts at 0
         self.max_state = 1  # Saturates at 1
         self.min_state = 0  # Lower bound at 0
