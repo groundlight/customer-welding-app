@@ -9,8 +9,75 @@ from weld.config import app_config, camera_config
 
 logger = logging.getLogger(__name__)
 
-# Global lock status
-lock_status = {"is_locked": False}
+try:
+    import RPi.GPIO as GPIO
+
+    GPIO_AVAILABLE = True
+except ImportError:
+    GPIO_AVAILABLE = False
+    logger.warning("RPi.GPIO not available on this platform. GPIO functions will not work.")
+
+
+class JigLockService:
+    """Service to lock and unlock the jig station."""
+
+    def __init__(self) -> None:
+        self.is_locked = False
+        self.lock_status_json = {"is_locked": self.is_locked}
+
+        # TODO: Make this configurable in the config file
+        self.GPIO_PIN = 24
+
+        # Setup GPIO
+        if GPIO_AVAILABLE:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(self.GPIO_PIN, GPIO.OUT)
+
+    def lock(self) -> bool:
+        """Lock the jig station.
+
+        Returns:
+            bool: True if the jig station was locked successfully, False otherwise.
+        """
+
+        if GPIO_AVAILABLE:
+            try:
+                GPIO.output(self.GPIO_PIN, GPIO.HIGH)
+            except Exception as e:
+                logger.error(f"Failed to lock the jig station: {e}", exc_info=True)
+                return False
+
+        if self.is_locked:
+            logger.info("Jig station already locked")
+            return True
+
+        self.is_locked = True
+        self.lock_status_json["is_locked"] = self.is_locked
+        logger.info("Jig station locked")
+        return True
+
+    def unlock(self) -> bool:
+        """Unlock the jig station.
+
+        Returns:
+            bool: True if the jig station was unlocked successfully, False otherwise.
+        """
+
+        if GPIO_AVAILABLE:
+            try:
+                GPIO.output(self.GPIO_PIN, GPIO.LOW)
+            except Exception as e:
+                logger.error(f"Failed to unlock the jig station: {e}", exc_info=True)
+                return False
+
+        if not self.is_locked:
+            logger.info("Jig station already unlocked")
+            return True
+
+        self.is_locked = False
+        self.lock_status_json["is_locked"] = self.is_locked
+        logger.info("Jig station unlocked")
+        return True
 
 
 class WeldCountService:
@@ -30,6 +97,12 @@ class WeldCountService:
         self.thread = None
 
     def get_weld_data(self) -> dict:
+        """Get the weld data.
+
+        Returns:
+            dict: Weld data dictionary with part number, left weld count, and right weld count.
+        """
+
         return self.weld_data
 
     def start_weld_count(self, part_number: str, jig_number: int) -> None:
