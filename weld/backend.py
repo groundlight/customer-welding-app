@@ -84,6 +84,7 @@ class WeldCountService:
     """Service to send ML request to Groundlight and count the number of welds."""
 
     def __init__(self) -> None:
+        # TODO: Makes this configurable to use edge-endpoint
         self.gl = Groundlight()
         self.detector = self.gl.get_detector(id=app_config.ml_detector_id)
         self.weld_data = {
@@ -160,6 +161,8 @@ class WeldCountService:
                 frame = grabber.grab()
             except Exception as e:
                 logger.error(f"Failed to grab frame: {e}", exc_info=True)
+                grabber.release()
+                grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
                 continue
 
             # Cut the frame in half to get the left and right welds
