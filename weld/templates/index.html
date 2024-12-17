@@ -27,7 +27,7 @@
                     <label for="jig-number">Jig Number</label>
                     <span class="error-message" id="error-jig-number"></span>
                     <select id="jig-number" class="dropdown" name="jig_number">
-                        {% for i in range(1, 11) %}
+                        {% for i in range(1, TotalJigStations + 1) %}
                         <option value="{{ i }}">{{ i }}</option>
                         {% endfor %}
                     </select>

@@ -17,6 +17,7 @@ def create_default_context() -> dict:
     """
 
     context = {
+        "TotalJigStations": None,
         "LeftWelder": None,
         "RightWelder": None,
         "JigNumber": None,
@@ -72,6 +73,10 @@ def index():
 
     context = create_default_context()
     weld_count_service.stop_weld_count()
+
+    # Get total number of Jig Stations
+    total_jig_stations = len(config.camera_config.jig_stations)
+    context["TotalJigStations"] = total_jig_stations
 
     return render_template("index.html", **context)
 
