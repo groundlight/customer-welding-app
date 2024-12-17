@@ -23,7 +23,7 @@ class SaturatingCounter:
 
     def __init__(self):
         self.state = 0  # Counter starts at 0
-        self.max_state = 3  # Saturates at 3
+        self.max_state = 1  # Saturates at 1
         self.min_state = 0  # Lower bound at 0
 
     def update(self, condition: bool) -> str:
@@ -43,7 +43,7 @@ class SaturatingCounter:
             self.state = max(self.min_state, self.state - 1)
 
         # Return the state result based on ranges
-        return "YES" if self.state >= 2 else "NO"
+        return "YES" if self.state >= 1 else "NO"
 
 
 class JigLockService:
