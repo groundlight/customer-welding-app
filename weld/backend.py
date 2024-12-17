@@ -61,6 +61,15 @@ class JigLockService:
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(self.GPIO_PIN, GPIO.OUT)
 
+            # Get current state of the GPIO pin
+            try:
+                current_state = GPIO.input(self.GPIO_PIN)
+                self.is_locked = current_state == GPIO.HIGH
+                self.lock_status_json["is_locked"] = self.is_locked
+            except Exception as e:
+                logger.error(f"Failed to read GPIO pin state: {e}", exc_info=True)
+                self.is_locked = False  # Fail-safe default
+
     def lock(self) -> bool:
         """Lock the jig station.
 
@@ -68,21 +77,23 @@ class JigLockService:
             bool: True if the jig station was locked successfully, False otherwise.
         """
 
-        if GPIO_AVAILABLE:
-            try:
-                GPIO.output(self.GPIO_PIN, GPIO.HIGH)
-            except Exception as e:
-                logger.error(f"Failed to lock the jig station: {e}", exc_info=True)
+        if not GPIO_AVAILABLE:
+            logger.warning("GPIO functionality is unavailable. Cannot lock.")
+            return False
+
+        try:
+            GPIO.output(self.GPIO_PIN, GPIO.HIGH)
+            if GPIO.input(self.GPIO_PIN) == GPIO.HIGH:
+                self.is_locked = True
+                self.lock_status_json["is_locked"] = self.is_locked
+                logger.info("Jig station locked successfully")
+                return True
+            else:
+                logger.error("Failed to verify pin state after locking")
                 return False
-
-        if self.is_locked:
-            logger.info("Jig station already locked")
-            return True
-
-        self.is_locked = True
-        self.lock_status_json["is_locked"] = self.is_locked
-        logger.info("Jig station locked")
-        return True
+        except Exception as e:
+            logger.error(f"Failed to lock the jig station: {e}", exc_info=True)
+            return False
 
     def unlock(self) -> bool:
         """Unlock the jig station.
@@ -91,21 +102,23 @@ class JigLockService:
             bool: True if the jig station was unlocked successfully, False otherwise.
         """
 
-        if GPIO_AVAILABLE:
-            try:
-                GPIO.output(self.GPIO_PIN, GPIO.LOW)
-            except Exception as e:
-                logger.error(f"Failed to unlock the jig station: {e}", exc_info=True)
+        if not GPIO_AVAILABLE:
+            logger.warning("GPIO functionality is unavailable. Cannot unlock.")
+            return False
+
+        try:
+            GPIO.output(self.GPIO_PIN, GPIO.LOW)
+            if GPIO.input(self.GPIO_PIN) == GPIO.LOW:
+                self.is_locked = False
+                self.lock_status_json["is_locked"] = self.is_locked
+                logger.info("Jig station unlocked successfully")
+                return True
+            else:
+                logger.error("Failed to verify pin state after unlocking")
                 return False
-
-        if not self.is_locked:
-            logger.info("Jig station already unlocked")
-            return True
-
-        self.is_locked = False
-        self.lock_status_json["is_locked"] = self.is_locked
-        logger.info("Jig station unlocked")
-        return True
+        except Exception as e:
+            logger.error(f"Failed to unlock the jig station: {e}", exc_info=True)
+            return False
 
 
 class WeldCountService:
@@ -183,9 +196,8 @@ class WeldCountService:
         right_weld_has_flash = False
 
         while self.is_running:
-            
             logging.info("Grabbing frame")
-            
+
             try:
                 frame = grabber.grab()
             except Exception as e:
@@ -193,7 +205,7 @@ class WeldCountService:
                 grabber.release()
                 grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
                 continue
-            
+
             logger.info("Frame grabbed")
 
             # Split frame into left and right
@@ -232,7 +244,7 @@ class WeldCountService:
                 logger.info("Right weld flash detected, count incremented.")
             elif right_result == "NO":
                 right_weld_has_flash = False
-            
+
             logger.info("Single frame processed")
 
         # Release the grabber before thread exit
