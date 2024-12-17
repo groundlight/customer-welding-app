@@ -18,6 +18,34 @@ except ImportError:
     logger.warning("RPi.GPIO not available on this platform. GPIO functions will not work.")
 
 
+class SaturatingCounter:
+    """4-state 2-bit Saturating Counter."""
+
+    def __init__(self):
+        self.state = 0  # Counter starts at 0
+        self.max_state = 3  # Saturates at 3
+        self.min_state = 0  # Lower bound at 0
+
+    def update(self, condition: bool) -> str:
+        """
+        Update the counter based on condition.
+
+        Args:
+            condition (bool): True if input == "YES", False otherwise.
+
+        Returns:
+            str: "YES" if state >= 2, "NO" otherwise.
+        """
+
+        if condition:  # Increment on "YES"
+            self.state = min(self.max_state, self.state + 1)
+        else:  # Decrement on "NO"
+            self.state = max(self.min_state, self.state - 1)
+
+        # Return the state result based on ranges
+        return "YES" if self.state >= 2 else "NO"
+
+
 class JigLockService:
     """Service to lock and unlock the jig station."""
 
@@ -141,22 +169,23 @@ class WeldCountService:
             self.thread = None
 
     def weld_count_thread(self, jig_number: int) -> None:
-        """Thread to count the number of welds for the given jig number.
+        """Thread to count the number of welds for the given jig number."""
 
-        Args:
-            jig_number (int): Jig number for the weld (to determine the RTSP camera for ML).
-        """
-
-        # Get the camera configuration for the jig number
+        # Camera setup
         jig_camera_config = camera_config.jig_stations[jig_number].camera_config
-
         grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
         logger.debug(f"Initialized FrameGrab with camera config: {grabber.config}")
 
+        # Flash states and counters
+        left_weld_counter = SaturatingCounter()
+        right_weld_counter = SaturatingCounter()
         left_weld_has_flash = False
         right_weld_has_flash = False
 
         while self.is_running:
+            
+            logging.info("Grabbing frame")
+            
             try:
                 frame = grabber.grab()
             except Exception as e:
@@ -164,36 +193,50 @@ class WeldCountService:
                 grabber.release()
                 grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
                 continue
+            
+            logger.info("Frame grabbed")
 
-            # Cut the frame in half to get the left and right welds
+            # Split frame into left and right
             half_width = frame.shape[1] // 2
             left_frame = frame[:, :half_width]
             right_frame = frame[:, half_width:]
 
+            logger.info("Asking ML for weld detection")
+
             try:
-                # Send the left and right frames to the detector
                 iq_left = self.gl.ask_async(detector=self.detector, image=left_frame)
                 iq_right = self.gl.ask_async(detector=self.detector, image=right_frame)
 
-                # Poll for result
                 iq_left = self.gl.wait_for_ml_result(image_query=iq_left, timeout_sec=30)
                 iq_right = self.gl.wait_for_ml_result(image_query=iq_right, timeout_sec=30)
             except Exception as e:
                 logger.error(f"Failed to get ML result: {e}", exc_info=True)
                 continue
 
-            # Update the weld count
-            if iq_left.result.label == "YES" and not left_weld_has_flash:
+            logger.info("ML result received")
+
+            # Left weld logic with 2-bit counter
+            left_result = left_weld_counter.update(iq_left.result.label == "YES")
+            if left_result == "YES" and not left_weld_has_flash:
                 self.weld_data["leftWeldCount"] += 1
                 left_weld_has_flash = True
-            else:
+                logger.info("Left weld flash detected, count incremented.")
+            elif left_result == "NO":
                 left_weld_has_flash = False
 
-            if iq_right.result.label == "YES" and not right_weld_has_flash:
+            # Right weld logic with 2-bit counter
+            right_result = right_weld_counter.update(iq_right.result.label == "YES")
+            if right_result == "YES" and not right_weld_has_flash:
                 self.weld_data["rightWeldCount"] += 1
                 right_weld_has_flash = True
-            else:
+                logger.info("Right weld flash detected, count incremented.")
+            elif right_result == "NO":
                 right_weld_has_flash = False
+            
+            logger.info("Single frame processed")
+
+        # Release the grabber before thread exit
+        grabber.release()
 
 
 class PrinterService:
