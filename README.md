@@ -53,3 +53,15 @@ poetry run python run.py
 ```
 
 Note that the GPIO function will not work and the app will shows a warning about this.
+
+For testing your own RTSP streams you can use VLC's command to start a RTSP server on your local machine.
+
+```bash
+brew install vlc
+```
+
+```bash
+vlc -vvv YOUR_VIDEO_HERE --loop --sout '#transcode{vcodec=h264,acodec=mpga,ab=128,channels=2,samplerate=44100,scodec=none}:rtp{sdp=rtsp://:8554/feed}' --sout-all --sout-keep
+```
+
+The video should be broadcasting on `rtsp://127.0.0.1:8554/feed` or on your machine assigned IP address.
