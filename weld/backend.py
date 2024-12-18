@@ -13,7 +13,7 @@ try:
     import RPi.GPIO as GPIO
 
     GPIO_AVAILABLE = True
-except ImportError:
+except Exception:
     GPIO_AVAILABLE = False
     logger.warning("RPi.GPIO not available on this platform. GPIO functions will not work.")
 
