@@ -11,6 +11,7 @@ jobs:
       POETRY_VERSION: "1.8.2"
       WELD_APP_CONFIG: ${{ vars.WELD_APP_SAMPLE_CONFIG }}
       WELD_APP_CAMERA_CONFIG: ${{ vars.WELD_APP_CAMERA_SAMPLE_CONFIG }}
+      GROUNDLIGHT_API_TOKEN: ${{ secrets.GROUNDLIGHT_API_TOKEN }}
 
     steps:
     - uses: actions/checkout@v4
