@@ -1,5 +1,12 @@
+import sys
 import unittest
-from groundlight import Groundlight
+
+from unittest.mock import Mock
+
+# Mock RPi.GPIO if unavailable
+if "RPi.GPIO" not in sys.modules:
+    sys.modules["RPi.GPIO"] = Mock()
+
 from weld import backend
 
 
