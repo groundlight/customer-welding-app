@@ -1,12 +1,14 @@
-import sys
-import logging
-import time
-
 from flask import Flask, render_template, request, jsonify, redirect, url_for, current_app
 
-from weld import backend
+from weld import backend, config
 
 app = Flask(__name__)
+
+"""Initialize all backend services"""
+jig_lock_service = backend.JigLockService()
+printer_service = backend.PrinterService()
+weld_count_service = backend.WeldCountService()
+
 
 def create_default_context() -> dict:
     """Creates a default content for all the information that will be displayed to the Frontend.
@@ -15,6 +17,7 @@ def create_default_context() -> dict:
     """
 
     context = {
+        "TotalJigStations": None,
         "LeftWelder": None,
         "RightWelder": None,
         "JigNumber": None,
@@ -25,7 +28,7 @@ def create_default_context() -> dict:
         "ActualPartNumber": None,
         "ActualLeftWelds": None,
         "ActualRightWelds": None,
-        "route": "/",
+        "Error": None,
     }
     return context
 
@@ -34,24 +37,22 @@ def create_default_context() -> dict:
 def get_lock_status():
     """Endpoint to check the lock status."""
 
-    return jsonify(backend.lock_status)
+    return jsonify(jig_lock_service.lock_status_json)
 
 
 @app.route("/api/lock-status", methods=["POST"])
 def set_lock_status():
     """Endpoint to update the lock status."""
 
-    lock_status = backend.lock_status
     data = request.get_json()
 
     if "is_locked" in data:
-        lock_status["is_locked"] = data["is_locked"]
-
-        # TODO: Call backend to actually lock/unlock the device
-        if lock_status["is_locked"]:
+        if data["is_locked"]:
             app.logger.info("Locking the device")
+            jig_lock_service.lock()
         else:
             app.logger.info("Unlocking the device")
+            jig_lock_service.unlock()
 
         app.logger.info(f"Lock status updated to: {'Locked' if data['is_locked'] else 'Unlocked'}")
         return jsonify({"message": "Lock status updated successfully"}), 200
@@ -63,14 +64,7 @@ def set_lock_status():
 def get_weld_data():
     """Endpoint to get the weld data."""
 
-    # TODO: Call backend to get the weld data
-
-    data = {
-        "partNumber": "0123456789",
-        "leftWeldCount": 20,
-        "rightWeldCount": 20,
-    }
-    return jsonify(data)
+    return jsonify(weld_count_service.get_weld_data())
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -78,6 +72,11 @@ def index():
     """Load the index page of the website with camera preview."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
+
+    # Get total number of Jig Stations
+    total_jig_stations = len(config.camera_config.jig_stations)
+    context["TotalJigStations"] = total_jig_stations
 
     return render_template("index.html", **context)
 
@@ -87,6 +86,7 @@ def part():
     """Load the part page of the website with camera preview."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -107,7 +107,7 @@ def part():
 
     else:
         # Redirect back to the index page if the request is not POST (no login information received)
-        return render_template("part.html", **context)
+        return redirect(url_for("index"))
 
 
 @app.route("/process", methods=["GET", "POST"])
@@ -115,6 +115,7 @@ def process():
     """Load the process page of the website with ML result."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -138,7 +139,11 @@ def process():
             }
         )
 
-        # TODO: Call backend to start the ML to count the welds
+        # Lock the jig
+        jig_lock_service.lock()
+
+        # Start weld count ML
+        weld_count_service.start_weld_count(part_number=part_number, jig_number=int(jig_number))
 
         return render_template("process.html", **context)
 
@@ -152,6 +157,7 @@ def review():
     """Load the process page of the website with ML result."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -191,6 +197,7 @@ def print_tag():
     """Print the receipt of the welds."""
 
     context = create_default_context()
+    weld_count_service.stop_weld_count()
 
     if request.method == "POST":
         left_welder = request.form.get("left_welder")
@@ -220,7 +227,19 @@ def print_tag():
             }
         )
 
-        # TODO: Call backend to print the receipt
+        # Unlock the jig
+        jig_lock_service.unlock()
+
+        if not printer_service.print_tag(
+            shift=int(shift_number),
+            jig=int(jig_number),
+            part_number=part_number,
+            left_count=int(actual_left_welds),
+            right_count=int(actual_right_welds),
+            left_welder=left_welder,
+            right_welder=right_welder,
+        ):
+            context["Error"] = "Failed to print the tag. Please try again."
 
         return render_template("print.html", **context)
 
