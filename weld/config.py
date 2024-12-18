@@ -23,10 +23,40 @@ SAMPLE_APP_CAMERA_CONFIG = """
 {
     "jig_stations": {
         "1": {
-            "camera_config": "name: Jig Station 1 Camera\ninput_type: rtsp\nid:\n  rtsp_url: RTSP_1"
+            "camera_config": {
+                "name": "Jig Station 1 Camera",
+                "input_type": "rtsp",
+                "id": {
+                    "rtsp_url": "RTSP_URL_HERE"
+                },
+                "options": {
+                    "keep_connection_open": true,
+                    "crop": {
+                        "relative": {
+                            "left": 0.0,
+                            "right": 1.0
+                        }
+                    }
+                }
+            }
         }, 
         "2": {
-            "camera_config": "name: Jig Station 2 Camera\ninput_type: rtsp\nid:\n  rtsp_url: RTSP_2"
+            "camera_config": {
+                "name": "Jig Station 2 Camera",
+                "input_type": "rtsp",
+                "id": {
+                    "rtsp_url": "RTSP_URL_HERE"
+                },
+                "options": {
+                    "keep_connection_open": true,
+                    "crop": {
+                        "relative": {
+                            "left": 0.0,
+                            "right": 1.0
+                        }
+                    }
+                }
+            }
         }
     }
 }

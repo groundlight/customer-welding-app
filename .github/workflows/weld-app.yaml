@@ -9,6 +9,8 @@ jobs:
     env:
       PYTHON_VERSION: "3.11"
       POETRY_VERSION: "1.8.2"
+      WELD_APP_CONFIG: ${{ vars.WELD_APP_SAMPLE_CONFIG }}
+      WELD_APP_CAMERA_CONFIG: ${{ vars.WELD_APP_CAMERA_SAMPLE_CONFIG }}
 
     steps:
     - uses: actions/checkout@v4
