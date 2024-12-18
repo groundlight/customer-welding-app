@@ -208,7 +208,7 @@ class WeldCountService:
             except Exception as e:
                 logger.error(f"Failed to grab frame: {e}", exc_info=True)
                 grabber.release()
-                grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
+                grabber = FrameGrabber.create_grabber(jig_camera_config)
                 continue
 
             logger.info("Frame grabbed")
