@@ -50,8 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle lock toggle click
-    toggleLock.addEventListener("change", function () {
+    toggleLock.addEventListener("change", function (event) {
         if (passwordRequired) {
+            // Prevent the toggle from switching immediately
+            event.preventDefault();
+            event.stopPropagation();
             passwordModal.style.display = "flex";
         } else {
             updateLockStatus(!isLocked);
