@@ -68,6 +68,8 @@ app_config = None
 camera_config_raw = os.getenv("WELD_APP_CAMERA_CONFIG", None)
 camera_config = None
 
+supervisor_password = os.getenv("WELD_APP_SUPERVISOR_PASSWORD", None)
+
 
 class PrinterConfig(BaseModel):
     printer_ip: str = Field(..., description="Tag Printer IP")

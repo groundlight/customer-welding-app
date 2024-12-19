@@ -40,11 +40,27 @@ def get_lock_status():
     return jsonify(jig_lock_service.lock_status_json)
 
 
+@app.route("/api/password-required", methods=["GET"])
+def is_password_required():
+    """Endpoint to check if the password is required."""
+
+    if config.supervisor_password is None or config.supervisor_password == "":
+        return jsonify({"password_required": False})
+
+    return jsonify({"password_required": True})
+
+
 @app.route("/api/lock-status", methods=["POST"])
 def set_lock_status():
     """Endpoint to update the lock status."""
 
     data = request.get_json()
+
+    # Check if the password is correct
+    if config.supervisor_password is not None and config.supervisor_password != "":
+        if "password" not in data or data["password"] != config.supervisor_password:
+            app.logger.warning("Incorrect password attempt")
+            return jsonify({"error": "Invalid password"}), 403
 
     if "is_locked" in data:
         if data["is_locked"]:
