@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const passwordModal = document.getElementById("password-modal");
     var url = document.getElementById('index-form').action
 
     async function updateData() {
@@ -25,10 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form behavior
-            const submitButton = document.querySelector('#review-button');
-            if (submitButton) {
-                submitButton.click();
+            event.preventDefault();
+            // Prevent default behavior if the password modal is active
+            if (passwordModal && passwordModal.style.display === "flex") {
+                document.getElementById("submit-password").click(); // Trigger the password modal submission
+            } else {
+                const submitButton = document.querySelector('#review-button');
+                if (submitButton) {
+                    submitButton.click();
+                }
             }
         }
     });

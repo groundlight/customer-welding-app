@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftWeldInput = document.getElementById('expected-left-welds');
     const rightWeldInput = document.getElementById('expected-right-welds');
     const totalWeldDisplay = document.getElementById('total-welds');
+    const passwordModal = document.getElementById("password-modal");
 
     const errors = {
         partNumber: document.getElementById("error-part-number"),
@@ -52,10 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form behavior
-            const submitButton = document.querySelector('#start-welding-button');
-            if (submitButton) {
-                submitButton.click();
+            event.preventDefault();
+            // Prevent default behavior if the password modal is active
+            if (passwordModal && passwordModal.style.display === "flex") {
+                document.getElementById("submit-password").click(); // Trigger the password modal submission
+            } else {
+                const submitButton = document.querySelector('#start-welding-button');
+                if (submitButton) {
+                    submitButton.click();
+                }
             }
         }
     });
