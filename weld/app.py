@@ -256,16 +256,16 @@ def print_tag():
         # Unlock the jig
         jig_lock_service.unlock()
 
-        # if not printer_service.print_tag(
-        #     shift=int(shift_number),
-        #     jig=int(jig_number),
-        #     part_number=part_number,
-        #     left_count=int(actual_left_welds),
-        #     right_count=int(actual_right_welds),
-        #     left_welder=left_welder,
-        #     right_welder=right_welder,
-        # ):
-        #     context["Error"] = "Failed to print the tag. Please try again."
+        if not printer_service.print_tag(
+            shift=int(shift_number),
+            jig=int(jig_number),
+            part_number=part_number,
+            left_count=int(actual_left_welds),
+            right_count=int(actual_right_welds),
+            left_welder=left_welder,
+            right_welder=right_welder,
+        ):
+            context["Error"] = "Failed to print the tag. Please try again."
 
         return render_template("print.html", **context)
 
