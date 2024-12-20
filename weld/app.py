@@ -1,3 +1,4 @@
+import bcrypt
 from flask import Flask, render_template, request, jsonify, redirect, url_for, current_app
 
 from weld import backend, config
@@ -35,6 +36,18 @@ def create_default_context() -> dict:
     return context
 
 
+@app.route("/api/parts", methods=["GET"])
+def get_parts():
+    """Endpoint to fetch part numbers from the database."""
+    database = {
+        "ABC123": {"Left Weld Count": 5, "Right Weld Count": 2},
+        "XYZ283": {"Left Weld Count": 2, "Right Weld Count": 0},
+        "IJK238": {"Left Weld Count": 0, "Right Weld Count": 3},
+        "DI39843NDz": {"Left Weld Count": 0, "Right Weld Count": 12},
+    }
+    return jsonify(database)
+
+
 @app.route("/api/lock-status", methods=["GET"])
 def get_lock_status():
     """Endpoint to check the lock status."""
@@ -60,7 +73,7 @@ def set_lock_status():
 
     # Check if the password is correct
     if config.supervisor_password is not None and config.supervisor_password != "":
-        if "password" not in data or data["password"] != config.supervisor_password:
+        if "password" not in data or not bcrypt.checkpw(password=data["password"].encode(), hashed_password=config.supervisor_password.encode()):
             app.logger.warning("Incorrect password attempt")
             return jsonify({"error": "Invalid password"}), 403
 

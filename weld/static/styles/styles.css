@@ -455,3 +455,7 @@ input:checked+.slider:before {
 .weld-stats tbody tr:hover {
     background-color: #f9f9f9;
 }
+
+.hidden {
+    display: none;
+}
