@@ -401,7 +401,7 @@ input:checked+.slider:before {
         transform: translate(-50%, -50%) rotate(0deg);
     }
 
-100% {
+    100% {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
@@ -426,4 +426,32 @@ input:checked+.slider:before {
     background-color: #fff;
     border-radius: 5px;
     text-align: center;
+}
+
+/* Table Cells */
+.weld-stats {
+    width: 70%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: center;
+}
+
+.weld-stats th,
+.weld-stats td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    /* Center align the text in cells */
+    vertical-align: middle;
+    /* Center align text vertically */
+}
+
+.weld-stats th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.weld-stats tbody tr:hover {
+    background-color: #f9f9f9;
 }

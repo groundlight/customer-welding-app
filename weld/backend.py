@@ -417,3 +417,60 @@ class PrinterService:
         )
 
         return self._send_to_printer(zpl)
+
+
+class ShiftService:
+    """Service to manage the session data for a shift."""
+
+    def __init__(self):
+        self.part_stats: dict[str, int] = {}
+        self.left_welder_name = None
+        self.right_welder_name = None
+        self.jig_number = None
+        self.shift_number = None
+
+    def start_shift(self, left_welder_name: str, right_welder_name: str, jig_number: int, shift_number: int):
+        """Start the shift with the given welder names.
+
+        Args:
+            left_welder_name (str): Name of the left welder.
+            right_welder_name (str): Name of the right welder.
+            jig_number (int): Jig number.
+            shift_number (int): Shift number.
+        """
+
+        # Create a new session with the given welder names. If the previous session is the same, do nothing.
+        if (
+            self.left_welder_name == left_welder_name
+            and self.right_welder_name == right_welder_name
+            and self.jig_number == jig_number
+            and self.shift_number == shift_number
+        ):
+            logger.info("Shift already started with the same welders. Ignoring the request.")
+            return
+
+        self.left_welder_name = left_welder_name
+        self.right_welder_name = right_welder_name
+        self.jig_number = jig_number
+        self.shift_number = shift_number
+        self.part_stats = {}
+
+    def update_stats(self, part_number: str):
+        """Update the part stats for the given part number.
+
+        Args:
+            part_number (str): Part number to update the stats.
+        """
+
+        if part_number not in self.part_stats:
+            self.part_stats[part_number] = 0
+        self.part_stats[part_number] += 1
+
+    def get_stats(self):
+        """Get the current part stats.
+
+        Returns:
+            dict: Part stats dictionary with part number as key and count as value.
+        """
+
+        return self.part_stats

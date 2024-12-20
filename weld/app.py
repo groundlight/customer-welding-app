@@ -8,6 +8,7 @@ app = Flask(__name__)
 jig_lock_service = backend.JigLockService()
 printer_service = backend.PrinterService()
 weld_count_service = backend.WeldCountService()
+shift_service = backend.ShiftService()
 
 
 def create_default_context() -> dict:
@@ -28,6 +29,7 @@ def create_default_context() -> dict:
         "ActualPartNumber": None,
         "ActualLeftWelds": None,
         "ActualRightWelds": None,
+        "WeldStats": None,
         "Error": None,
     }
     return context
@@ -119,6 +121,10 @@ def part():
                 "ShiftNumber": shift_number,
             }
         )
+
+        # Start the shift
+        shift_service.start_shift(left_welder_name=left_welder, right_welder_name=right_welder, jig_number=jig_number, shift_number=shift_number)
+
         return render_template("part.html", **context)
 
     else:
@@ -227,6 +233,9 @@ def print_tag():
         actual_left_welds = request.form.get("actual_left_welds")
         actual_right_welds = request.form.get("actual_right_welds")
 
+        # Add the welds to the database
+        shift_service.update_stats(part_number=actual_part_number)
+
         # Update the context with submitted data
         context.update(
             {
@@ -240,22 +249,23 @@ def print_tag():
                 "ActualPartNumber": actual_part_number,
                 "ActualLeftWelds": actual_left_welds,
                 "ActualRightWelds": actual_right_welds,
+                "WeldStats": shift_service.get_stats(),
             }
         )
 
         # Unlock the jig
         jig_lock_service.unlock()
 
-        if not printer_service.print_tag(
-            shift=int(shift_number),
-            jig=int(jig_number),
-            part_number=part_number,
-            left_count=int(actual_left_welds),
-            right_count=int(actual_right_welds),
-            left_welder=left_welder,
-            right_welder=right_welder,
-        ):
-            context["Error"] = "Failed to print the tag. Please try again."
+        # if not printer_service.print_tag(
+        #     shift=int(shift_number),
+        #     jig=int(jig_number),
+        #     part_number=part_number,
+        #     left_count=int(actual_left_welds),
+        #     right_count=int(actual_right_welds),
+        #     left_welder=left_welder,
+        #     right_welder=right_welder,
+        # ):
+        #     context["Error"] = "Failed to print the tag. Please try again."
 
         return render_template("print.html", **context)
 
