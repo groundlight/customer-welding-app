@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             event.stopPropagation();
             passwordModal.style.display = "flex";
+            // Focus on the password input
+            passwordInput.focus();
         } else {
             updateLockStatus(!isLocked);
         }
