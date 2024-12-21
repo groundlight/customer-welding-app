@@ -30,22 +30,38 @@
                 <p>Shift: <b>{{ ShiftNumber }}</b></p>
             </div>
 
-            <!--Line Separator-->
-            <hr class="separator">
-
-            <!--Input Section-->
+            <!-- Part Number Selection -->
             <div class="vertical-group">
-                <div class="input-group">
+                <div id="manual-part-number-group" class="input-group hidden">
                     <label for="part-number">Enter Part Number</label>
                     <span class="error-message" id="error-part-number"></span>
-                    <input type="text" id="part-number" class="text-box" name="part_number" placeholder="Enter Part Number">
+                    <input type="text" id="part-number" class="text-box" name="part_number"
+                        placeholder="Enter Part Number">
+                </div>
+                <div id="dropdown-part-number-group" class="input-group">
+                    <label for="part-number-select">Select Part Number</label>
+                    <div class="dropdown-refresh-group">
+                        <select id="part-number-select" class="text-box dropdown">
+                            <option value="" disabled selected>-- Select Part Number --</option>
+                        </select>
+                        <button type="button" id="refresh-parts" class="refresh-button">Refresh</button>
+                    </div>
                 </div>
             </div>
+
+            <div class="horizontal-group">
+                <input type="checkbox" id="manual-checkbox">Enter Manually
+            </div>
+
+            <br
+
+            <!-- Prefilled Weld Counts -->
             <div class="horizontal-group">
                 <div class="input-group">
                     <label>Left Welds</label>
                     <div class="control-group">
-                        <input type="number" id="expected-left-welds" class="text-box" name="expected_left_welds" value="0" min="0" max="200">
+                        <input type="number" id="expected-left-welds" class="text-box" name="expected_left_welds"
+                            value="0" min="0" max="200">
                         <button class="decrement" data-target="left">-</button>
                         <button class="increment" data-target="left">+</button>
                     </div>
@@ -53,7 +69,8 @@
                 <div class="input-group">
                     <label>Right Welds</label>
                     <div class="control-group">
-                        <input type="number" id="expected-right-welds" class="text-box" name="expected_right_welds" value="0" min="0" max="200">
+                        <input type="number" id="expected-right-welds" class="text-box" name="expected_right_welds"
+                            value="0" min="0" max="200">
                         <button class="decrement" data-target="right">-</button>
                         <button class="increment" data-target="right">+</button>
                     </div>

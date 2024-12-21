@@ -143,6 +143,40 @@ body {
     font-size: 30px;
 }
 
+.dropdown-refresh-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown {
+    flex: 1;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+.refresh-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    transition: background-color 0.3s;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.refresh-button:hover {
+    background-color: #e0e0e0;
+}
+
 .text-box-weld {
     box-sizing: border-box;
     width: 100px;
@@ -401,7 +435,7 @@ input:checked+.slider:before {
         transform: translate(-50%, -50%) rotate(0deg);
     }
 
-    100% {
+100% {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
@@ -428,10 +462,17 @@ input:checked+.slider:before {
     text-align: center;
 }
 
+/* Check Box */
+#manual-checkbox {
+    transform: scale(1.5);
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
 /* Table Cells */
 .weld-stats {
-    width: 70%;
     border-collapse: collapse;
+    width: 70%;
     margin: 20px 0;
     font-size: 16px;
     text-align: center;
@@ -439,12 +480,10 @@ input:checked+.slider:before {
 
 .weld-stats th,
 .weld-stats td {
-    border: 1px solid #ddd;
     padding: 8px;
+    border: 1px solid #ddd;
     text-align: center;
-    /* Center align the text in cells */
     vertical-align: middle;
-    /* Center align text vertically */
 }
 
 .weld-stats th {
