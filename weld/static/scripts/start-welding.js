@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftWeldInput = document.getElementById('expected-left-welds');
     const rightWeldInput = document.getElementById('expected-right-welds');
     const totalWeldDisplay = document.getElementById('total-welds');
+    var url_prefix = document.getElementById('index-form').action
 
     const toggleManualEntry = () => {
         if (manualCheckbox.checked) {
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchParts = () => {
-        fetch('/api/parts')
+        fetch(url_prefix + '/api/parts')
             .then(response => response.json())
             .then(data => {
                 partNumberSelect.innerHTML = '<option value="" disabled selected>-- Select Part Number --</option>';
