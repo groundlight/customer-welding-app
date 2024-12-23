@@ -78,7 +78,7 @@ SAMPLE_APP_DATABASE_CONFIG = """
         "client_x509_cert_url": "CLIENT_CERT_URL_HERE",
         "universe_domain": "googleapis.com"
     },
-    "database_id": "1cauE9LEn5K9RdyqvSNVcGgD92MEXfp5wa9_HgWXfT1c",
+    "database_id": "YOUR_DATABASE_ID_HERE",
     "database_range": "Sheet1!A2:C"
 }
 """
