@@ -10,6 +10,7 @@ jig_lock_service = backend.JigLockService()
 printer_service = backend.PrinterService()
 weld_count_service = backend.WeldCountService()
 shift_service = backend.ShiftService()
+google_api_service = backend.GoogleAPIService()
 
 
 def create_default_context() -> dict:
@@ -39,12 +40,7 @@ def create_default_context() -> dict:
 @app.route("/api/parts", methods=["GET"])
 def get_parts():
     """Endpoint to fetch part numbers from the database."""
-    database = {
-        "ABC123": {"Left Weld Count": 5, "Right Weld Count": 2},
-        "XYZ283": {"Left Weld Count": 2, "Right Weld Count": 0},
-        "IJK238": {"Left Weld Count": 0, "Right Weld Count": 3},
-        "DI39843NDz": {"Left Weld Count": 0, "Right Weld Count": 12},
-    }
+    database = google_api_service.get_updated_part_number_database()
     return jsonify(database)
 
 
