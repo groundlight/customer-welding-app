@@ -73,6 +73,31 @@ The app requires the following environment variables:
 
 Each `camera_config` entries will need to match the configuration settings for `FrameGrab` so the cameras can be intiialized correctly.
 
+- `WELD_APP_DATABASE_CONFIG`: This is the database config for fetching data from Google API Service.
+
+```json
+{
+    "enabled": true,
+    "service_account": {
+        "type": "service_account",
+        "project_id": "PROJECT_ID_HERE",
+        "private_key_id": "PRIVATE_KEY_ID_HERE",
+        "private_key": "PRIVATE_KEY_HERE",
+        "client_email": "CLIENT_EMAIL_HERE",
+        "client_id": "CLIENT_ID_HERE",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "CLIENT_CERT_URL_HERE",
+        "universe_domain": "googleapis.com"
+    },
+    "database_id": "YOUR_DATABASE_ID_HERE",
+    "database_range": "Sheet1!A2:C"
+}
+```
+
+The `service_account` section should match the credential JSON file downloaded from Google Cloud.
+
 - `GROUNDLIGHT_API_TOKEN`: Groundlight API Token
 
 - `LAUNCH_URL`: Set this to `http://router/hub/launch/1` to ensure that the device automatically redirects to the application main page when it is ready
