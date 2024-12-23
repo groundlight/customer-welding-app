@@ -227,8 +227,8 @@ class WeldCountService:
                 iq_left = self.gl.ask_async(detector=self.detector, image=left_frame)
                 iq_right = self.gl.ask_async(detector=self.detector, image=right_frame)
 
-                iq_left = self.gl.wait_for_ml_result(image_query=iq_left, timeout_sec=30)
-                iq_right = self.gl.wait_for_ml_result(image_query=iq_right, timeout_sec=30)
+                iq_left = self.gl.wait_for_ml_result(image_query=iq_left, timeout_sec=5)
+                iq_right = self.gl.wait_for_ml_result(image_query=iq_right, timeout_sec=5)
             except Exception as e:
                 logger.error(f"Failed to get ML result: {e}", exc_info=True)
                 continue
