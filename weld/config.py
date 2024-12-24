@@ -83,6 +83,8 @@ SAMPLE_APP_DATABASE_CONFIG = """
 }
 """
 
+device_id = os.getenv("WELD_APP_DEVICE_ID", "Default")
+
 app_config_raw = os.getenv("WELD_APP_CONFIG", None)
 app_config = None
 

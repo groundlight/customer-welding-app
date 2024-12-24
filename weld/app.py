@@ -20,6 +20,7 @@ def create_default_context() -> dict:
     """
 
     context = {
+        "DeviceID": config.device_id,
         "TotalJigStations": None,
         "LeftWelder": None,
         "RightWelder": None,

@@ -100,6 +100,8 @@ The `service_account` section should match the credential JSON file downloaded f
 
 - `WELD_APP_SUPERVISOR_PASSWORD`: The supervisor password to lock/unlock the Jig Lock, default to None if not set
 
+- `WELD_APP_DEVICE_ID`: Set the device ID for this particular device, should set this unique for each device for easier debugging
+
 - `GROUNDLIGHT_API_TOKEN`: Groundlight API Token
 
 - `LAUNCH_URL`: Set this to `http://router/hub/launch/1` to ensure that the device automatically redirects to the application main page when it is ready
