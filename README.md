@@ -120,7 +120,7 @@ Copy the hashed password generated from the script to the environment variable:
 export WELD_APP_SUPERVISOR_PASSWORD="HASHED_PASSWORD"
 ```
 
-For balena deployment just copy the hashed password into the `Device Bariables` tab.
+For balena deployment just copy the hashed password into the `Device Variables` tab.
 
 ## Local Testing
 
