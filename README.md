@@ -98,9 +98,29 @@ Each `camera_config` entries will need to match the configuration settings for `
 
 The `service_account` section should match the credential JSON file downloaded from Google Cloud.
 
+- `WELD_APP_SUPERVISOR_PASSWORD`: The supervisor password to lock/unlock the Jig Lock, default to None if not set
+
 - `GROUNDLIGHT_API_TOKEN`: Groundlight API Token
 
 - `LAUNCH_URL`: Set this to `http://router/hub/launch/1` to ensure that the device automatically redirects to the application main page when it is ready
+
+### Creating Supervisor Password
+
+If the you would like to only allow supervisors to lock/unlock the Jig Lock, you need to set the environment variable `WELD_APP_SUPERVISOR_PASSWORD` with the hashed password.
+
+The hashed password can be created with the `generate_hash.py` script by running the following command:
+
+```bash
+poetry run python generate_hash.py PASSWORD
+```
+
+Copy the hashed password generated from the script to the environment variable:
+
+```bash
+export WELD_APP_SUPERVISOR_PASSWORD="HASHED_PASSWORD"
+```
+
+For balena deployment just copy the hashed password into the `Device Bariables` tab.
 
 ## Local Testing
 
