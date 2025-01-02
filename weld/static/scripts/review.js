@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const expectedLeftWeld = document.getElementById('expected-left-welds');
     const expectedRightWeld = document.getElementById('expected-right-welds');
     const expectedTotalWeld = document.getElementById('expected-total-welds');
+    const passwordModal = document.getElementById("password-modal");
+
     expectedTotalWeld.textContent = parseInt(expectedLeftWeld.textContent, 10) + parseInt(expectedRightWeld.textContent, 10);
     totalWeldDisplay.textContent = parseInt(leftWeldInput.value, 10) + parseInt(rightWeldInput.value, 10);
 
@@ -63,10 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form behavior
-            const submitButton = document.querySelector('#print-tag-button');
-            if (submitButton) {
-                submitButton.click();
+            event.preventDefault();
+            // Prevent default behavior if the password modal is active
+            if (passwordModal && passwordModal.style.display === "flex") {
+                document.getElementById("submit-password").click(); // Trigger the password modal submission
+            } else {
+                const submitButton = document.querySelector('#print-tag-button');
+                if (submitButton) {
+                    submitButton.click();
+                }
             }
         }
     });

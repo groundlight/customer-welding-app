@@ -1,12 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const startWeldingButton = document.getElementById("start-welding-button");
-    const partNumber = document.getElementById("part-number");
+    const manualPartNumberInput = document.getElementById('part-number');
+    const manualCheckbox = document.getElementById('manual-checkbox');
+    const manualPartNumberGroup = document.getElementById('manual-part-number-group');
+    const dropdownPartNumberGroup = document.getElementById('dropdown-part-number-group');
+    const partNumberSelect = document.getElementById('part-number-select');
+    const refreshPartsButton = document.getElementById('refresh-parts');
     const leftWeldInput = document.getElementById('expected-left-welds');
     const rightWeldInput = document.getElementById('expected-right-welds');
     const totalWeldDisplay = document.getElementById('total-welds');
+    var url_prefix = document.getElementById('index-form').action
 
-    const errors = {
-        partNumber: document.getElementById("error-part-number"),
+    const toggleManualEntry = () => {
+        if (manualCheckbox.checked) {
+            manualPartNumberInput.name = 'part_number';
+            partNumberSelect.removeAttribute('name');
+            manualPartNumberGroup.classList.remove('hidden');
+            dropdownPartNumberGroup.classList.add('hidden');
+        } else {
+            partNumberSelect.name = 'part_number';
+            manualPartNumberInput.removeAttribute('name');
+            manualPartNumberGroup.classList.add('hidden');
+            dropdownPartNumberGroup.classList.remove('hidden');
+        }
+    };
+
+    const fetchParts = () => {
+        fetch(url_prefix + '/api/parts')
+            .then(response => response.json())
+            .then(data => {
+                partNumberSelect.innerHTML = '<option value="" disabled selected>-- Select Part Number --</option>';
+                Object.keys(data).forEach(partNumber => {
+                    const option = document.createElement('option');
+                    option.value = partNumber;
+                    option.textContent = partNumber;
+                    option.dataset.leftWelds = data[partNumber]['Left Weld Count'];
+                    option.dataset.rightWelds = data[partNumber]['Right Weld Count'];
+                    partNumberSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching part numbers:', error));
     };
 
     const updateTotalWelds = () => {
@@ -15,22 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
         totalWeldDisplay.textContent = leftWelds + rightWelds;
     };
 
-    function validateFields() {
-        let isValid = true;
-
-        // Reset error messages
-        Object.values(errors).forEach((error) => {
-            error.textContent = "";
-        });
-
-        // Check if Part Number has value
-        if (!partNumber.value) {
-            errors.partNumber.textContent = "Please enter a Part Number.";
-            isValid = false;
+    partNumberSelect.addEventListener('change', (event) => {
+        const selectedOption = event.target.selectedOptions[0];
+        if (selectedOption) {
+            leftWeldInput.value = selectedOption.dataset.leftWelds || 0;
+            rightWeldInput.value = selectedOption.dataset.rightWelds || 0;
+            updateTotalWelds();
         }
+    });
 
-        return isValid;
-    }
+    refreshPartsButton.addEventListener('click', fetchParts);
 
     document.querySelectorAll('.increment, .decrement').forEach(button => {
         button.addEventListener('click', (event) => {
@@ -45,28 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             input.value = currentValue;
             updateTotalWelds();
-            // Prevent form submission as we are not submitting a form
             event.preventDefault();
         });
     });
 
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form behavior
-            const submitButton = document.querySelector('#start-welding-button');
-            if (submitButton) {
-                submitButton.click();
-            }
-        }
-    });
-
-    startWeldingButton.addEventListener("click", function (event) {
-        // Prevent form submission if validation fails
-        if (!validateFields()) {
-            event.preventDefault();
-        }
-    });
-
+    manualCheckbox.addEventListener('change', toggleManualEntry);
     leftWeldInput.addEventListener('input', updateTotalWelds);
     rightWeldInput.addEventListener('input', updateTotalWelds);
+
+    // Initial setup
+    toggleManualEntry();
+    fetchParts();
+    updateTotalWelds();
 });

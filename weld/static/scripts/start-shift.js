@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const shiftNumber = document.getElementById("shift-number");
     const leftWelder = document.getElementById("left-welder");
     const rightWelder = document.getElementById("right-welder");
+    const passwordModal = document.getElementById("password-modal");
 
     const errors = {
         jigNumber: document.getElementById("error-jig-number"),
@@ -49,10 +50,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form behavior
-            const submitButton = document.querySelector('#start-shift-button');
-            if (submitButton) {
-                submitButton.click();
+            event.preventDefault();
+            // Prevent default behavior if the password modal is active
+            if (passwordModal && passwordModal.style.display === "flex") {
+                document.getElementById("submit-password").click(); // Trigger the password modal submission
+            } else {
+                const submitButton = document.querySelector('#start-shift-button');
+                if (submitButton) {
+                    submitButton.click();
+                }
             }
         }
     });

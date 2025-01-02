@@ -42,6 +42,30 @@
             <input type="hidden" name="jig_number" value="{{ JigNumber }}">
             <input type="hidden" name="shift_number" value="{{ ShiftNumber }}">
 
+            <!--Show Stats with WeldStats Table-->
+            <div class="content-center">
+                {% if WeldStats %}
+                <table class="weld-stats">
+                    <thead>
+                        <tr>
+                            <th>Part Number</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for part_number, completed in WeldStats.items() %}
+                        <tr>
+                            <td>{{ part_number }}</td>
+                            <td>{{ completed }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No weld stats available.</p>
+                {% endif %}
+            </div>
+
             <!--Line Separator-->
             <hr class="separator">
 

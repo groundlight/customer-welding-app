@@ -1,11 +1,14 @@
+import json
 import socket
 import logging
 import datetime
 import threading
 from groundlight import Groundlight
 from framegrab import FrameGrabber
+from googleapiclient.discovery import build
+from google.oauth2.service_account import Credentials
 
-from weld.config import app_config, camera_config
+from weld.config import app_config, camera_config, database_config
 
 logger = logging.getLogger(__name__)
 
@@ -208,7 +211,7 @@ class WeldCountService:
             except Exception as e:
                 logger.error(f"Failed to grab frame: {e}", exc_info=True)
                 grabber.release()
-                grabber = FrameGrabber.create_grabber_yaml(jig_camera_config)
+                grabber = FrameGrabber.create_grabber(jig_camera_config)
                 continue
 
             logger.info("Frame grabbed")
@@ -224,8 +227,8 @@ class WeldCountService:
                 iq_left = self.gl.ask_async(detector=self.detector, image=left_frame)
                 iq_right = self.gl.ask_async(detector=self.detector, image=right_frame)
 
-                iq_left = self.gl.wait_for_ml_result(image_query=iq_left, timeout_sec=30)
-                iq_right = self.gl.wait_for_ml_result(image_query=iq_right, timeout_sec=30)
+                iq_left = self.gl.wait_for_ml_result(image_query=iq_left, timeout_sec=5)
+                iq_right = self.gl.wait_for_ml_result(image_query=iq_right, timeout_sec=5)
             except Exception as e:
                 logger.error(f"Failed to get ML result: {e}", exc_info=True)
                 continue
@@ -417,3 +420,128 @@ class PrinterService:
         )
 
         return self._send_to_printer(zpl)
+
+
+class ShiftService:
+    """Service to manage the session data for a shift."""
+
+    def __init__(self):
+        self.part_stats: dict[str, int] = {}
+        self.left_welder_name = None
+        self.right_welder_name = None
+        self.jig_number = None
+        self.shift_number = None
+
+    def start_shift(self, left_welder_name: str, right_welder_name: str, jig_number: int, shift_number: int):
+        """Start the shift with the given welder names.
+
+        Args:
+            left_welder_name (str): Name of the left welder.
+            right_welder_name (str): Name of the right welder.
+            jig_number (int): Jig number.
+            shift_number (int): Shift number.
+        """
+
+        # Create a new session with the given welder names. If the previous session is the same, do nothing.
+        if (
+            self.left_welder_name == left_welder_name
+            and self.right_welder_name == right_welder_name
+            and self.jig_number == jig_number
+            and self.shift_number == shift_number
+        ):
+            logger.info("Shift already started with the same welders. Ignoring the request.")
+            return
+
+        self.left_welder_name = left_welder_name
+        self.right_welder_name = right_welder_name
+        self.jig_number = jig_number
+        self.shift_number = shift_number
+        self.part_stats = {}
+
+    def update_stats(self, part_number: str):
+        """Update the part stats for the given part number.
+
+        Args:
+            part_number (str): Part number to update the stats.
+        """
+
+        if part_number not in self.part_stats:
+            self.part_stats[part_number] = 0
+        self.part_stats[part_number] += 1
+
+    def get_stats(self):
+        """Get the current part stats.
+
+        Returns:
+            dict: Part stats dictionary with part number as key and count as value.
+        """
+
+        return self.part_stats
+
+
+class GoogleAPIService:
+    """Service to interact with the Google API."""
+
+    def __init__(self) -> None:
+        self.scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+        self.service_account = database_config.service_account
+        self.spreadsheet_id = database_config.database_id
+        self.range_name = database_config.database_range
+        self.enabled = database_config.enabled
+        self.sheet = None
+        self.part_number_database = {}
+
+        if self.enabled:
+            self.check_and_initialize_credentials()
+
+    def check_and_initialize_credentials(self) -> bool:
+        """Check if the Google API settings are valid. If valid, initialize the credentials.
+
+        Returns:
+            bool: True if the settings are valid, False otherwise.
+        """
+
+        try:
+            credentials = Credentials.from_service_account_info(self.service_account, scopes=self.scopes)
+            service = build("sheets", "v4", credentials=credentials)
+
+            self.sheet = service.spreadsheets()
+
+            return True
+        except Exception as e:
+            logger.error(f"Failed to initialize Google API credentials: {e}", exc_info=True)
+
+        return False
+
+    def get_updated_part_number_database(self) -> dict:
+        """Get the updated part number database from the Google Spreadsheet.
+
+        Returns:
+            dict: Part number database dictionary with part number as key and weld counts as values.
+        """
+
+        if not self.enabled:
+            logger.info("Part Number Database is not enabled. Skipping update.")
+            return self.part_number_database
+
+        try:
+            result = self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=self.range_name).execute()
+            values = result.get("values", [])
+
+            self.part_number_database = {}
+
+            for row in values:
+                if len(row) >= 1:  # Ensure the first column (Part Number) is present
+                    part_number = row[0]
+
+                    left_weld_count = int(row[1]) if len(row) > 1 and row[1].isdigit() else 0
+                    right_weld_count = int(row[2]) if len(row) > 2 and row[2].isdigit() else 0
+
+                    self.part_number_database[part_number] = {"Left Weld Count": left_weld_count, "Right Weld Count": right_weld_count}
+
+            return self.part_number_database
+
+        except Exception as e:
+            logger.error(f"Failed to update Part Number Database: {e}", exc_info=True)
+
+        return self.part_number_database

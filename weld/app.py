@@ -1,3 +1,4 @@
+import bcrypt
 from flask import Flask, render_template, request, jsonify, redirect, url_for, current_app
 
 from weld import backend, config
@@ -8,6 +9,8 @@ app = Flask(__name__)
 jig_lock_service = backend.JigLockService()
 printer_service = backend.PrinterService()
 weld_count_service = backend.WeldCountService()
+shift_service = backend.ShiftService()
+google_api_service = backend.GoogleAPIService()
 
 
 def create_default_context() -> dict:
@@ -17,6 +20,7 @@ def create_default_context() -> dict:
     """
 
     context = {
+        "DeviceID": config.device_id,
         "TotalJigStations": None,
         "LeftWelder": None,
         "RightWelder": None,
@@ -28,9 +32,17 @@ def create_default_context() -> dict:
         "ActualPartNumber": None,
         "ActualLeftWelds": None,
         "ActualRightWelds": None,
+        "WeldStats": None,
         "Error": None,
     }
     return context
+
+
+@app.route("/api/parts", methods=["GET"])
+def get_parts():
+    """Endpoint to fetch part numbers from the database."""
+    database = google_api_service.get_updated_part_number_database()
+    return jsonify(database)
 
 
 @app.route("/api/lock-status", methods=["GET"])
@@ -40,11 +52,27 @@ def get_lock_status():
     return jsonify(jig_lock_service.lock_status_json)
 
 
+@app.route("/api/password-required", methods=["GET"])
+def is_password_required():
+    """Endpoint to check if the password is required."""
+
+    if config.supervisor_password is None or config.supervisor_password == "":
+        return jsonify({"password_required": False})
+
+    return jsonify({"password_required": True})
+
+
 @app.route("/api/lock-status", methods=["POST"])
 def set_lock_status():
     """Endpoint to update the lock status."""
 
     data = request.get_json()
+
+    # Check if the password is correct
+    if config.supervisor_password is not None and config.supervisor_password != "":
+        if "password" not in data or not bcrypt.checkpw(password=data["password"].encode(), hashed_password=config.supervisor_password.encode()):
+            app.logger.warning("Incorrect password attempt")
+            return jsonify({"error": "Invalid password"}), 403
 
     if "is_locked" in data:
         if data["is_locked"]:
@@ -103,6 +131,10 @@ def part():
                 "ShiftNumber": shift_number,
             }
         )
+
+        # Start the shift
+        shift_service.start_shift(left_welder_name=left_welder, right_welder_name=right_welder, jig_number=jig_number, shift_number=shift_number)
+
         return render_template("part.html", **context)
 
     else:
@@ -211,6 +243,9 @@ def print_tag():
         actual_left_welds = request.form.get("actual_left_welds")
         actual_right_welds = request.form.get("actual_right_welds")
 
+        # Add the welds to the database
+        shift_service.update_stats(part_number=actual_part_number)
+
         # Update the context with submitted data
         context.update(
             {
@@ -224,6 +259,7 @@ def print_tag():
                 "ActualPartNumber": actual_part_number,
                 "ActualLeftWelds": actual_left_welds,
                 "ActualRightWelds": actual_right_welds,
+                "WeldStats": shift_service.get_stats(),
             }
         )
 

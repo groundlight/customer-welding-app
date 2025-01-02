@@ -4,6 +4,10 @@
         Groundlight
     </div>
     <div id="header-right">
-        Device ID / Weldcounter
+        {% if DeviceID %}
+        Device ID: {{ DeviceID }} / Weldcounter
+        {% else %}
+        Device ID: Default / Weldcounter
+        {% endif %}
     </div>
 </div>

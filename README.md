@@ -73,9 +73,66 @@ The app requires the following environment variables:
 
 Each `camera_config` entries will need to match the configuration settings for `FrameGrab` so the cameras can be intiialized correctly.
 
+- `WELD_APP_DATABASE_CONFIG`: This is the database config for fetching data from Google API Service.
+
+```json
+{
+    "enabled": true,
+    "service_account": {
+        "type": "service_account",
+        "project_id": "PROJECT_ID_HERE",
+        "private_key_id": "PRIVATE_KEY_ID_HERE",
+        "private_key": "PRIVATE_KEY_HERE",
+        "client_email": "CLIENT_EMAIL_HERE",
+        "client_id": "CLIENT_ID_HERE",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "CLIENT_CERT_URL_HERE",
+        "universe_domain": "googleapis.com"
+    },
+    "database_id": "YOUR_DATABASE_ID_HERE",
+    "database_range": "Sheet1!A2:C"
+}
+```
+
+The `service_account` section should match the credential JSON file downloaded from Google Cloud.
+
+- `WELD_APP_SUPERVISOR_PASSWORD`: The supervisor password to lock/unlock the Jig Lock, default to None if not set
+
+- `WELD_APP_DEVICE_ID`: Set the device ID for this particular device, should set this unique for each device for easier debugging
+
 - `GROUNDLIGHT_API_TOKEN`: Groundlight API Token
 
 - `LAUNCH_URL`: Set this to `http://router/hub/launch/1` to ensure that the device automatically redirects to the application main page when it is ready
+
+### Setting up Database
+
+The app can communciate with Google Sheets to get the weld count of a particular part number if the `WELD_APP_DATABASE_CONFIG` is properly configured. The sheet should follow the following format:
+
+| Part Number              | Left Weld Count | Right Weld Count |
+| :----------------------- | :-------------: | :--------------: |
+| Part1                    |        5        |         2        |
+| Part2                    |        2        |         0        |
+| Part3                    |        0        |        10        |
+
+### Creating Supervisor Password
+
+If the you would like to only allow supervisors to lock/unlock the Jig Lock, you need to set the environment variable `WELD_APP_SUPERVISOR_PASSWORD` with the hashed password.
+
+The hashed password can be created with the `generate_hash.py` script by running the following command:
+
+```bash
+poetry run python generate_hash.py PASSWORD
+```
+
+Copy the hashed password generated from the script to the environment variable:
+
+```bash
+export WELD_APP_SUPERVISOR_PASSWORD="HASHED_PASSWORD"
+```
+
+For balena deployment just copy the hashed password into the `Device Variables` tab.
 
 ## Local Testing
 
