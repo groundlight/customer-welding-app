@@ -106,6 +106,16 @@ The `service_account` section should match the credential JSON file downloaded f
 
 - `LAUNCH_URL`: Set this to `http://router/hub/launch/1` to ensure that the device automatically redirects to the application main page when it is ready
 
+### Setting up Database
+
+The app can communciate with Google Sheets to get the weld count of a particular part number if the `WELD_APP_DATABASE_CONFIG` is properly configured. The sheet should follow the following format:
+
+| Part Number              | Left Weld Count | Right Weld Count |
+| :----------------------- | :-------------: | :--------------: |
+| Part1                    |        5        |         2        |
+| Part2                    |        2        |         0        |
+| Part3                    |        0        |        10        |
+
 ### Creating Supervisor Password
 
 If the you would like to only allow supervisors to lock/unlock the Jig Lock, you need to set the environment variable `WELD_APP_SUPERVISOR_PASSWORD` with the hashed password.
